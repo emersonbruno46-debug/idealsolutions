@@ -128,7 +128,7 @@ const fadeUp = {
 };
 
 const handleContact = () => {
-  window.open("https://wa.me/5538999105529?text=Olá,%20quero%20transformar%20minha%20marca%20com%20vocês!", "_blank");
+  window.open("https://wa.me/5538991532617?text=Olá,%20quero%20transformar%20minha%20marca%20com%20vocês!", "_blank");
 };
 
 // Button-in-Button CTA Architecture (Haptic Micro-Aesthetic)
