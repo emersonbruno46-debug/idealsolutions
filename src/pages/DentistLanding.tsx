@@ -3,6 +3,7 @@ import {
   ArrowRight, Menu, X, ChevronDown, Plus, Minus,
   CheckCircle2, Check, Smartphone, Globe, Layers, ShieldCheck, Award, ChevronLeft, ChevronRight, Lock
 } from "lucide-react";
+import { ShaderBackground } from "@/components/ui/bue-drift";
 
 /* ─── Smooth Scroll Helper ─── */
 function scrollTo(id: string) {
@@ -312,43 +313,48 @@ export default function DentistLanding() {
 
       <main>
         {/* ════════════════════════════════════════════════════════════
-            01. HERO SECTION & FORMULÁRIO (NO EYEBROW)
+            01. HERO SECTION WITH SHADER DRIFT BACKGROUND & EQUAL HEIGHT FORM CARD (GLASSMORPHISM)
         ════════════════════════════════════════════════════════════ */}
-        <section id="hero" className="bg-[#0F172A] text-white pt-28 pb-16 sm:pt-36 sm:pb-20 border-b border-slate-800">
-          <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
-            <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+        <section id="hero" className="relative bg-[#0F172A] text-white pt-28 pb-16 sm:pt-36 sm:pb-20 border-b border-slate-800 overflow-hidden">
+          {/* Shader Drift WebGL Canvas Background */}
+          <ShaderBackground className="absolute inset-0 opacity-40 pointer-events-none" />
+
+          <div className="max-w-[1240px] mx-auto px-5 sm:px-8 relative z-10">
+            <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
               
               {/* Left Column: Headline, Subheadline & Value Props */}
-              <div className="lg:col-span-6 space-y-6 lg:pt-2">
-                <h1 className="text-[30px] sm:text-[42px] lg:text-[46px] font-black leading-[1.12] tracking-tight text-white">
-                  Fazemos sua clínica atrair mais pacientes{" "}
-                  <span className="text-[#FFD400] font-black underline decoration-[#FFD400]/40 underline-offset-4">
-                    sem depender só de indicação.
-                  </span>
-                </h1>
+              <div className="lg:col-span-6 flex flex-col justify-between space-y-6 lg:py-2">
+                <div className="space-y-5">
+                  <h1 className="text-[30px] sm:text-[42px] lg:text-[46px] font-black leading-[1.12] tracking-tight text-white">
+                    Fazemos sua clínica atrair mais pacientes{" "}
+                    <span className="text-[#FFD400] font-black underline decoration-[#FFD400]/40 underline-offset-4">
+                      sem depender só de indicação.
+                    </span>
+                  </h1>
 
-                <p className="text-[16px] sm:text-[18px] text-slate-300 font-medium leading-relaxed">
-                  Estratégia, conteúdo e landing pages para transformar sua presença digital em mais autoridade, mais oportunidades e novos agendamentos.
-                </p>
+                  <p className="text-[16px] sm:text-[18px] text-slate-200 font-medium leading-relaxed">
+                    Estratégia, conteúdo e landing pages para transformar sua presença digital em mais autoridade, mais oportunidades e novos agendamentos.
+                  </p>
+                </div>
 
                 {/* 3 Short Arguments */}
-                <div className="space-y-3 pt-2">
-                  <div className="flex items-center gap-3 text-[14px] sm:text-[15px] font-semibold text-slate-200">
-                    <div className="w-6 h-6 rounded-full bg-[#FFD400]/15 text-[#FFD400] flex items-center justify-center flex-shrink-0">
+                <div className="space-y-3.5 py-2">
+                  <div className="flex items-center gap-3.5 text-[14px] sm:text-[15px] font-semibold text-slate-200">
+                    <div className="w-6.5 h-6.5 rounded-full bg-[#FFD400]/20 border border-[#FFD400]/40 text-[#FFD400] flex items-center justify-center flex-shrink-0">
                       <Check className="w-4 h-4 stroke-[3]" />
                     </div>
                     <span>Foco em clínicas e consultórios odontológicos.</span>
                   </div>
 
-                  <div className="flex items-center gap-3 text-[14px] sm:text-[15px] font-semibold text-slate-200">
-                    <div className="w-6 h-6 rounded-full bg-[#FFD400]/15 text-[#FFD400] flex items-center justify-center flex-shrink-0">
+                  <div className="flex items-center gap-3.5 text-[14px] sm:text-[15px] font-semibold text-slate-200">
+                    <div className="w-6.5 h-6.5 rounded-full bg-[#FFD400]/20 border border-[#FFD400]/40 text-[#FFD400] flex items-center justify-center flex-shrink-0">
                       <Check className="w-4 h-4 stroke-[3]" />
                     </div>
                     <span>Estratégia, conteúdo e páginas de captação.</span>
                   </div>
 
-                  <div className="flex items-center gap-3 text-[14px] sm:text-[15px] font-semibold text-slate-200">
-                    <div className="w-6 h-6 rounded-full bg-[#FFD400]/15 text-[#FFD400] flex items-center justify-center flex-shrink-0">
+                  <div className="flex items-center gap-3.5 text-[14px] sm:text-[15px] font-semibold text-slate-200">
+                    <div className="w-6.5 h-6.5 rounded-full bg-[#FFD400]/20 border border-[#FFD400]/40 text-[#FFD400] flex items-center justify-center flex-shrink-0">
                       <Check className="w-4 h-4 stroke-[3]" />
                     </div>
                     <span>Atendimento em todo o Brasil.</span>
@@ -356,11 +362,11 @@ export default function DentistLanding() {
                 </div>
 
                 {/* Desktop Action Button */}
-                <div className="pt-4 hidden lg:block">
+                <div className="pt-2 hidden lg:block">
                   <button
                     type="button"
                     onClick={() => scrollTo("#formulario")}
-                    className="inline-flex items-center gap-2.5 bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-7 py-3.5 rounded-xl text-[15px] transition-all shadow-md active:scale-95"
+                    className="inline-flex items-center gap-2.5 bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-8 py-4 rounded-xl text-[15px] transition-all shadow-lg active:scale-95 hover:shadow-[#FFD400]/20"
                   >
                     Quero atrair mais pacientes
                     <ArrowRight className="w-4 h-4" />
@@ -368,12 +374,13 @@ export default function DentistLanding() {
                 </div>
               </div>
 
-              {/* Right Column: FORM CARD */}
-              <div className="lg:col-span-6" id="formulario" style={{ scrollMarginTop: "100px" }}>
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-7 text-white shadow-2xl">
-                  
+              {/* Right Column: FORM CARD (GLASSMORPHISM & EQUAL HEIGHT MATCHING LEFT COLUMN) */}
+              <div className="lg:col-span-6 flex flex-col h-full" id="formulario" style={{ scrollMarginTop: "100px" }}>
+                <div className="bg-slate-900/60 backdrop-blur-xl border border-white/15 rounded-2xl p-6 sm:p-7 text-white shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col justify-between h-full relative overflow-hidden">
+                  <div className="absolute -top-12 -right-12 w-32 h-32 bg-[#FFD400]/10 rounded-full blur-2xl pointer-events-none" />
+
                   {success ? (
-                    <div className="py-10 text-center space-y-4">
+                    <div className="py-12 text-center space-y-4 my-auto">
                       <div className="w-14 h-14 rounded-full bg-[#FFD400]/15 border border-[#FFD400]/40 flex items-center justify-center mx-auto text-[#FFD400]">
                         <CheckCircle2 className="w-8 h-8" />
                       </div>
@@ -393,19 +400,19 @@ export default function DentistLanding() {
                       </button>
                     </div>
                   ) : (
-                    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-                      <div className="border-b border-slate-800 pb-3 mb-1">
+                    <form onSubmit={handleSubmit} className="space-y-4 flex flex-col justify-between h-full" noValidate>
+                      <div className="border-b border-white/10 pb-3 mb-1">
                         <h3 className="text-[18px] font-extrabold text-white tracking-tight">
                           Conte um pouco sobre sua clínica.
                         </h3>
-                        <p className="text-[13px] text-slate-400 mt-0.5">
-                          Preencha as informações abaixo. Nossa equipe entrará em contato em <strong className="text-slate-300">até 1 dia útil</strong>.
+                        <p className="text-[13px] text-slate-300 mt-0.5">
+                          Preencha as informações abaixo. Nossa equipe entrará em contato em <strong className="text-white">até 1 dia útil</strong>.
                         </p>
                       </div>
 
                       {/* 1. Nome */}
                       <div id="field-nome">
-                        <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                        <label className="block text-[12px] font-bold text-slate-200 mb-1">
                           Seu nome <span className="text-[#FFD400]">*</span>
                         </label>
                         <input
@@ -413,8 +420,8 @@ export default function DentistLanding() {
                           placeholder="Seu nome completo"
                           value={form.nome}
                           onChange={e => setField("nome", e.target.value)}
-                          className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
-                            errors.nome ? "border-red-500" : "border-slate-800"
+                          className={`w-full h-11 bg-slate-950/80 backdrop-blur-md border text-white placeholder-slate-400 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
+                            errors.nome ? "border-red-500" : "border-slate-700/80"
                           }`}
                         />
                         {errors.nome && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.nome}</span>}
@@ -422,7 +429,7 @@ export default function DentistLanding() {
 
                       {/* 2. Seu melhor e-mail */}
                       <div id="field-email">
-                        <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                        <label className="block text-[12px] font-bold text-slate-200 mb-1">
                           Seu melhor e-mail <span className="text-[#FFD400]">*</span>
                         </label>
                         <input
@@ -430,8 +437,8 @@ export default function DentistLanding() {
                           placeholder="seu.email@exemplo.com.br"
                           value={form.email}
                           onChange={e => setField("email", e.target.value)}
-                          className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
-                            errors.email ? "border-red-500" : "border-slate-800"
+                          className={`w-full h-11 bg-slate-950/80 backdrop-blur-md border text-white placeholder-slate-400 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
+                            errors.email ? "border-red-500" : "border-slate-700/80"
                           }`}
                         />
                         {errors.email && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.email}</span>}
@@ -439,7 +446,7 @@ export default function DentistLanding() {
 
                       {/* 3. Telefone */}
                       <div id="field-whatsapp">
-                        <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                        <label className="block text-[12px] font-bold text-slate-200 mb-1">
                           Telefone / WhatsApp <span className="text-[#FFD400]">*</span>
                         </label>
                         <input
@@ -447,8 +454,8 @@ export default function DentistLanding() {
                           placeholder="(11) 98765-4321"
                           value={form.whatsapp}
                           onChange={e => setField("whatsapp", fmtPhone(e.target.value))}
-                          className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
-                            errors.whatsapp ? "border-red-500" : "border-slate-800"
+                          className={`w-full h-11 bg-slate-950/80 backdrop-blur-md border text-white placeholder-slate-400 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
+                            errors.whatsapp ? "border-red-500" : "border-slate-700/80"
                           }`}
                         />
                         {errors.whatsapp && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.whatsapp}</span>}
@@ -456,7 +463,7 @@ export default function DentistLanding() {
 
                       {/* 4. Nome da empresa */}
                       <div id="field-clinica">
-                        <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                        <label className="block text-[12px] font-bold text-slate-200 mb-1">
                           Nome da empresa / clínica <span className="text-[#FFD400]">*</span>
                         </label>
                         <input
@@ -464,8 +471,8 @@ export default function DentistLanding() {
                           placeholder="Nome da sua clínica ou consultório"
                           value={form.clinica}
                           onChange={e => setField("clinica", e.target.value)}
-                          className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
-                            errors.clinica ? "border-red-500" : "border-slate-800"
+                          className={`w-full h-11 bg-slate-950/80 backdrop-blur-md border text-white placeholder-slate-400 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
+                            errors.clinica ? "border-red-500" : "border-slate-700/80"
                           }`}
                         />
                         {errors.clinica && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.clinica}</span>}
@@ -473,14 +480,14 @@ export default function DentistLanding() {
 
                       {/* 5. Segmento */}
                       <div id="field-segmento">
-                        <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                        <label className="block text-[12px] font-bold text-slate-200 mb-1">
                           Selecionar segmento <span className="text-[#FFD400]">*</span>
                         </label>
                         <select
                           value={form.segmento}
                           onChange={e => setField("segmento", e.target.value)}
-                          className={`w-full h-11 bg-slate-950 border text-white px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] cursor-pointer ${
-                            errors.segmento ? "border-red-500" : "border-slate-800"
+                          className={`w-full h-11 bg-slate-950/80 backdrop-blur-md border text-white px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] cursor-pointer ${
+                            errors.segmento ? "border-red-500" : "border-slate-700/80"
                           }`}
                         >
                           <option value="" className="bg-slate-950">Selecione o segmento...</option>
@@ -493,14 +500,14 @@ export default function DentistLanding() {
 
                       {/* 6. Faturamento */}
                       <div id="field-faturamento">
-                        <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                        <label className="block text-[12px] font-bold text-slate-200 mb-1">
                           Coloque seu faturamento atual <span className="text-[#FFD400]">*</span>
                         </label>
                         <select
                           value={form.faturamento}
                           onChange={e => setField("faturamento", e.target.value)}
-                          className={`w-full h-11 bg-slate-950 border text-white px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] cursor-pointer ${
-                            errors.faturamento ? "border-red-500" : "border-slate-800"
+                          className={`w-full h-11 bg-slate-950/80 backdrop-blur-md border text-white px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] cursor-pointer ${
+                            errors.faturamento ? "border-red-500" : "border-slate-700/80"
                           }`}
                         >
                           <option value="" className="bg-slate-950">Selecione...</option>
@@ -513,20 +520,20 @@ export default function DentistLanding() {
 
                       {/* CAIXAS OPCIONAIS DE INVESTIMENTO E CNPJ (SOMENTE PARA FATURAMENTO ABAIXO DE 60K) */}
                       {form.faturamento && form.faturamento !== "60k-100k" && form.faturamento !== "acima-100k" && (
-                        <div className="space-y-3.5 pt-3 border-t border-slate-800 bg-slate-950/70 p-3.5 rounded-lg animate-fadeIn">
+                        <div className="space-y-3.5 pt-3 border-t border-white/10 bg-slate-950/50 backdrop-blur-md p-3.5 rounded-lg animate-fadeIn">
                           <p className="text-[11px] font-bold text-[#FFD400] uppercase tracking-wider">
                             Informações Opcionais
                           </p>
 
                           {/* Investimento Opcional */}
                           <div>
-                            <label className="block text-[12px] font-bold text-slate-300 mb-1">
-                              Pretensão de investimento mensal <span className="text-slate-500 font-normal">(opcional)</span>
+                            <label className="block text-[12px] font-bold text-slate-200 mb-1">
+                              Pretensão de investimento mensal <span className="text-slate-400 font-normal">(opcional)</span>
                             </label>
                             <select
                               value={form.investimento}
                               onChange={e => setField("investimento", e.target.value)}
-                              className="w-full h-11 bg-slate-900 border border-slate-800 text-white px-3 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] cursor-pointer"
+                              className="w-full h-11 bg-slate-950/80 border border-slate-700/80 text-white px-3 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] cursor-pointer"
                             >
                               <option value="" className="bg-slate-950">Selecione a intenção de investimento...</option>
                               <option value="ate-1500" className="bg-slate-950">Até R$ 1.500 / mês</option>
@@ -537,15 +544,15 @@ export default function DentistLanding() {
 
                           {/* CNPJ Opcional */}
                           <div>
-                            <label className="block text-[12px] font-bold text-slate-300 mb-1">
-                              CNPJ <span className="text-slate-500 font-normal">(opcional)</span>
+                            <label className="block text-[12px] font-bold text-slate-200 mb-1">
+                              CNPJ <span className="text-slate-400 font-normal">(opcional)</span>
                             </label>
                             <input
                               type="text"
                               placeholder="00.000.000/0000-00"
                               value={form.cnpj}
                               onChange={e => setField("cnpj", fmtCNPJ(e.target.value))}
-                              className="w-full h-11 bg-slate-900 border border-slate-800 text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors"
+                              className="w-full h-11 bg-slate-950/80 border border-slate-700/80 text-white placeholder-slate-400 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors"
                             />
                           </div>
                         </div>
@@ -560,7 +567,7 @@ export default function DentistLanding() {
                             onChange={e => setField("lgpd", e.target.checked)}
                             className="mt-0.5 w-4 h-4 accent-[#FFD400] rounded cursor-pointer flex-shrink-0"
                           />
-                          <span className="text-[11px] text-slate-400 leading-tight">
+                          <span className="text-[11px] text-slate-300 leading-tight">
                             Concordo em fornecer meus dados para que a Ideal Solutions entre em contato comercial, em conformidade com a LGPD.
                           </span>
                         </label>
@@ -754,12 +761,14 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            04. MÉTODO IDEAL
+            04. MÉTODO IDEAL WITH SHADER BACKGROUND
         ════════════════════════════════════════════════════════════ */}
-        <section id="metodo" className="py-16 sm:py-24 bg-[#0F172A] text-white border-b border-slate-800">
-          <div className="max-w-[1140px] mx-auto px-5 sm:px-8">
+        <section id="metodo" className="relative bg-[#0F172A] text-white py-16 sm:py-24 border-b border-slate-800 overflow-hidden">
+          <ShaderBackground className="absolute inset-0 opacity-30 pointer-events-none" />
+
+          <div className="max-w-[1140px] mx-auto px-5 sm:px-8 relative z-10">
             <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
-              <span className="text-[#FFD400] font-extrabold text-[12px] uppercase tracking-widest bg-slate-800 px-3.5 py-1 rounded-full border border-slate-700 inline-block">
+              <span className="text-[#FFD400] font-extrabold text-[12px] uppercase tracking-widest bg-slate-800/90 px-3.5 py-1 rounded-full border border-slate-700 inline-block">
                 O Método IDEAL
               </span>
               <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18] text-white">
@@ -775,7 +784,7 @@ export default function DentistLanding() {
                 { letter: "A", title: "Acompanhamento próximo", desc: "Organizamos aprovações e acompanhamos entregas e indicadores relacionados ao projeto." },
                 { letter: "L", title: "Lapidação contínua", desc: "Ajustamos a comunicação e as ações com base nos dados disponíveis e no retorno da sua equipe." },
               ].map((m, i) => (
-                <div key={i} className="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-2.5">
+                <div key={i} className="bg-slate-900/80 backdrop-blur-md border border-slate-800 p-5 rounded-xl space-y-2.5">
                   <div className="w-10 h-10 rounded-lg bg-[#FFD400] text-[#0F172A] font-black text-[18px] flex items-center justify-center">
                     {m.letter}
                   </div>
@@ -883,12 +892,14 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            06. FAQ & SEÇÃO FINAL
+            06. FAQ & SEÇÃO FINAL WITH SHADER BACKGROUND
         ════════════════════════════════════════════════════════════ */}
-        <section id="faq" className="py-16 sm:py-24 bg-[#0F172A] text-white border-t border-slate-800">
-          <div className="max-w-[860px] mx-auto px-5 sm:px-8">
+        <section id="faq" className="relative bg-[#0F172A] text-white py-16 sm:py-24 border-t border-slate-800 overflow-hidden">
+          <ShaderBackground className="absolute inset-0 opacity-35 pointer-events-none" />
+
+          <div className="max-w-[860px] mx-auto px-5 sm:px-8 relative z-10">
             <div className="text-center max-w-xl mx-auto mb-14 space-y-2">
-              <span className="text-[#FFD400] font-extrabold text-[12px] uppercase tracking-widest bg-slate-800 px-3.5 py-1 rounded-full border border-slate-700 inline-block">
+              <span className="text-[#FFD400] font-extrabold text-[12px] uppercase tracking-widest bg-slate-800/90 px-3.5 py-1 rounded-full border border-slate-700 inline-block">
                 Dúvidas Frequentes
               </span>
               <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18]">
@@ -898,7 +909,7 @@ export default function DentistLanding() {
 
             <div className="space-y-3 mb-16">
               {FAQ_ITEMS.map((item, i) => (
-                <div key={i} className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden transition-all">
+                <div key={i} className="bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-xl overflow-hidden transition-all">
                   <button
                     type="button"
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
@@ -917,7 +928,7 @@ export default function DentistLanding() {
             </div>
 
             {/* Final Call Banner */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 sm:p-12 text-center space-y-5 shadow-xl">
+            <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-2xl p-8 sm:p-12 text-center space-y-5 shadow-xl">
               <h3 className="text-[24px] sm:text-[32px] font-black leading-[1.2] text-white max-w-lg mx-auto">
                 Vamos entender o que sua clínica precisa?
               </h3>
@@ -968,7 +979,6 @@ export default function DentistLanding() {
 
       {/* ════════════════════════════════════════════════════════════
           MOBILE STICKY CTA
-          Hidden when #formulario is in viewport!
       ════════════════════════════════════════════════════════════ */}
       {!formVisible && (
         <div className="md:hidden fixed bottom-0 left-0 right-0 p-3 bg-[#0F172A]/95 backdrop-blur-md border-t border-slate-800 z-40 transition-all duration-200">
