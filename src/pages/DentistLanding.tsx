@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowRight, Menu, X, ChevronDown, Plus, Minus,
-  CheckCircle2, Check, Smartphone, Globe, Layers, ShieldCheck, Award, ChevronLeft, ChevronRight, Lock, FileText
+  CheckCircle2, Check, Smartphone, Globe, Layers, ShieldCheck, Award, ChevronLeft, ChevronRight, Lock
 } from "lucide-react";
 
 /* ─── Smooth Scroll Helper ─── */
@@ -31,7 +31,7 @@ function fmtCNPJ(v: string) {
   return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8, 12)}-${d.slice(12)}`;
 }
 
-/* ─── Exact Revenue Tiers (Prompt Directive) ─── */
+/* ─── Revenue Tiers ─── */
 const REVENUE_TIERS = [
   { label: "Até R$ 10 mil", value: "ate-10k" },
   { label: "R$ 10 mil a R$ 30 mil", value: "10k-30k" },
@@ -40,28 +40,18 @@ const REVENUE_TIERS = [
   { label: "Acima de R$ 100 mil", value: "acima-100k" },
 ];
 
-/* ─── Dynamic Investment Qualification Mapping (Prompt Directive) ─── */
-const QUALIFICATION_VALUES: Record<string, string> = {
-  "ate-10k": "R$ 2.500",
-  "10k-30k": "R$ 3.000",
-  "30k-60k": "R$ 4.000",
-  "60k-100k": "R$ 5.000",
-  "acima-100k": "R$ 7.500",
-};
-
-/* ─── Main Objective Options ─── */
-const OBJECTIVE_OPTIONS = [
-  "Gestão e Estratégia Digital",
-  "Conteúdo para Instagram",
-  "Landing Page de Captação",
-  "Presença Digital Completa",
-  "Ainda não sei qual o melhor caminho",
+/* ─── Segment Options (Ramificações da Odontologia) ─── */
+const SEGMENTS = [
+  "Clínica Odontológica Multi-especialidades",
+  "Consultório Odontológico Individual",
+  "Ortodontia & Alinhadores",
+  "Implantodontia & Reabilitação",
+  "Estética Dental & Lentes",
+  "Harmonização Orofacial",
+  "Outro segmento odontológico",
 ];
 
-/* ─── States List ─── */
-const STATES = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
-
-/* ─── FAQ Data (Corrected & Standardized) ─── */
+/* ─── FAQ Data ─── */
 const FAQ_ITEMS = [
   {
     q: "Vocês atendem todo o Brasil?",
@@ -124,27 +114,22 @@ export default function DentistLanding() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [utms, setUtms] = useState<Record<string, string>>({});
 
-  // Form State
+  // EXACT FORM STATE (User instruction: Nome, Email, Telefone, Empresa, Segmento, Faturamento + caixas opcionais de CNPJ e Investimento ao selecionar faturamento)
   const [form, setForm] = useState({
     nome: "",
-    clinica: "",
+    email: "",
     whatsapp: "",
-    cidade: "",
-    estado: "",
-    instagram: "",
-    cnpj: "",
-    objetivo: "",
+    clinica: "",
+    segmento: "",
     faturamento: "",
-    dispostoInvestir: "", // SIM / NÃO
+    cnpj: "",
+    investimento: "",
     lgpd: true,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
-  // Suggested Investment based on selected revenue tier
-  const suggestedValue = QUALIFICATION_VALUES[form.faturamento] || "";
 
   // IntersectionObserver for Mobile Sticky CTA visibility
   useEffect(() => {
@@ -186,19 +171,12 @@ export default function DentistLanding() {
   const validate = () => {
     const e: Record<string, string> = {};
     if (!form.nome.trim()) e.nome = "Informe seu nome";
-    if (!form.clinica.trim()) e.clinica = "Informe o nome da clínica / consultório";
-    if (form.whatsapp.replace(/\D/g, "").length < 10) e.whatsapp = "WhatsApp válido (com DDD) é obrigatório";
-    if (!form.cidade.trim()) e.cidade = "Informe sua cidade";
-    if (!form.estado) e.estado = "Selecione o estado (UF)";
-    if (!form.objetivo) e.objetivo = "Selecione seu objetivo principal";
-    if (!form.faturamento) e.faturamento = "Selecione a faixa de faturamento mensal";
-    
-    // Qualification question becomes mandatory after revenue is selected
-    if (form.faturamento && !form.dispostoInvestir) {
-      e.dispostoInvestir = "Selecione SIM ou NÃO para prosseguir";
-    }
-    
-    if (!form.lgpd) e.lgpd = "Aceite o uso dos dados para contato comercial";
+    if (!form.email.trim() || !form.email.includes("@")) e.email = "E-mail válido é obrigatório";
+    if (form.whatsapp.replace(/\D/g, "").length < 10) e.whatsapp = "Telefone / WhatsApp é obrigatório";
+    if (!form.clinica.trim()) e.clinica = "Informe o nome da empresa / clínica";
+    if (!form.segmento) e.segmento = "Selecione o segmento";
+    if (!form.faturamento) e.faturamento = "Selecione o faturamento";
+    if (!form.lgpd) e.lgpd = "Aceite os termos para prosseguir";
     return e;
   };
 
@@ -216,7 +194,6 @@ export default function DentistLanding() {
     try {
       const payload = {
         ...form,
-        investimento_sugerido: suggestedValue ? `${suggestedValue}/mês` : "",
         ...utms,
         timestamp: new Date().toISOString(),
       };
@@ -335,7 +312,7 @@ export default function DentistLanding() {
 
       <main>
         {/* ════════════════════════════════════════════════════════════
-            01. HERO SECTION & FORMULÁRIO (PRIMEIRA DOBRA)
+            01. HERO SECTION & FORMULÁRIO (EXACTLY AS REQUESTED)
         ════════════════════════════════════════════════════════════ */}
         <section id="hero" className="bg-[#0F172A] text-white pt-28 pb-16 sm:pt-36 sm:pb-20 border-b border-slate-800">
           <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
@@ -360,7 +337,7 @@ export default function DentistLanding() {
                   Unimos estratégia, conteúdo para Instagram e landing pages para destacar os diferenciais da sua clínica e facilitar novos contatos.
                 </p>
 
-                {/* 3 Short Arguments (Prompt Directive) */}
+                {/* 3 Short Arguments */}
                 <div className="space-y-3 pt-2">
                   <div className="flex items-center gap-3 text-[14px] sm:text-[15px] font-semibold text-slate-200">
                     <div className="w-6 h-6 rounded-full bg-[#FFD400]/15 text-[#FFD400] flex items-center justify-center flex-shrink-0">
@@ -397,7 +374,7 @@ export default function DentistLanding() {
                 </div>
               </div>
 
-              {/* Right Column: FORM CARD WITH PERMANENT LABELS & DYNAMIC QUALIFICATION */}
+              {/* Right Column: FORM CARD (EXACTLY THE 6 SPECIFIED FIELDS + 2 OPTIONAL UPON REVENUE SELECTION) */}
               <div className="lg:col-span-6" id="formulario" style={{ scrollMarginTop: "100px" }}>
                 <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-7 text-white shadow-2xl">
                   
@@ -414,7 +391,7 @@ export default function DentistLanding() {
                         type="button"
                         onClick={() => {
                           setSuccess(false);
-                          setForm({ nome: "", clinica: "", whatsapp: "", cidade: "", estado: "", instagram: "", cnpj: "", objetivo: "", faturamento: "", dispostoInvestir: "", lgpd: true });
+                          setForm({ nome: "", email: "", whatsapp: "", clinica: "", segmento: "", faturamento: "", cnpj: "", investimento: "", lgpd: true });
                         }}
                         className="text-[13px] text-[#FFD400] underline font-bold pt-2 block mx-auto"
                       >
@@ -432,148 +409,98 @@ export default function DentistLanding() {
                         </p>
                       </div>
 
-                      {/* Row 1: Nome + Clínica */}
-                      <div className="grid sm:grid-cols-2 gap-3.5">
-                        <div id="field-nome">
-                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
-                            Nome Completo <span className="text-[#FFD400]">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Dr. Roberto Mendes"
-                            value={form.nome}
-                            onChange={e => setField("nome", e.target.value)}
-                            className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
-                              errors.nome ? "border-red-500" : "border-slate-800"
-                            }`}
-                          />
-                          {errors.nome && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.nome}</span>}
-                        </div>
-
-                        <div id="field-clinica">
-                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
-                            Clínica / Consultório <span className="text-[#FFD400]">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Mendes Odontologia"
-                            value={form.clinica}
-                            onChange={e => setField("clinica", e.target.value)}
-                            className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
-                              errors.clinica ? "border-red-500" : "border-slate-800"
-                            }`}
-                          />
-                          {errors.clinica && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.clinica}</span>}
-                        </div>
+                      {/* 1. Nome */}
+                      <div id="field-nome">
+                        <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                          Seu nome <span className="text-[#FFD400]">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Seu nome completo"
+                          value={form.nome}
+                          onChange={e => setField("nome", e.target.value)}
+                          className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
+                            errors.nome ? "border-red-500" : "border-slate-800"
+                          }`}
+                        />
+                        {errors.nome && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.nome}</span>}
                       </div>
 
-                      {/* Row 2: WhatsApp + Instagram */}
-                      <div className="grid sm:grid-cols-2 gap-3.5">
-                        <div id="field-whatsapp">
-                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
-                            WhatsApp (com DDD) <span className="text-[#FFD400]">*</span>
-                          </label>
-                          <input
-                            type="tel"
-                            placeholder="(11) 98765-4321"
-                            value={form.whatsapp}
-                            onChange={e => setField("whatsapp", fmtPhone(e.target.value))}
-                            className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
-                              errors.whatsapp ? "border-red-500" : "border-slate-800"
-                            }`}
-                          />
-                          {errors.whatsapp && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.whatsapp}</span>}
-                        </div>
-
-                        <div>
-                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
-                            Instagram ou Site <span className="text-slate-500 font-normal">(opcional)</span>
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="@suaclinica ou site.com.br"
-                            value={form.instagram}
-                            onChange={e => setField("instagram", e.target.value)}
-                            className="w-full h-11 bg-slate-950 border border-slate-800 text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors"
-                          />
-                        </div>
+                      {/* 2. Seu melhor e-mail */}
+                      <div id="field-email">
+                        <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                          Seu melhor e-mail <span className="text-[#FFD400]">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          placeholder="seu.email@exemplo.com.br"
+                          value={form.email}
+                          onChange={e => setField("email", e.target.value)}
+                          className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
+                            errors.email ? "border-red-500" : "border-slate-800"
+                          }`}
+                        />
+                        {errors.email && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.email}</span>}
                       </div>
 
-                      {/* Row 3: Cidade + Estado + CNPJ */}
-                      <div className="grid sm:grid-cols-3 gap-3.5">
-                        <div className="sm:col-span-2" id="field-cidade">
-                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
-                            Cidade <span className="text-[#FFD400]">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="São Paulo"
-                            value={form.cidade}
-                            onChange={e => setField("cidade", e.target.value)}
-                            className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
-                              errors.cidade ? "border-red-500" : "border-slate-800"
-                            }`}
-                          />
-                          {errors.cidade && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.cidade}</span>}
-                        </div>
-
-                        <div id="field-estado">
-                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
-                            UF <span className="text-[#FFD400]">*</span>
-                          </label>
-                          <select
-                            value={form.estado}
-                            onChange={e => setField("estado", e.target.value)}
-                            className={`w-full h-11 bg-slate-950 border text-white px-2.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] cursor-pointer ${
-                              errors.estado ? "border-red-500" : "border-slate-800"
-                            }`}
-                          >
-                            <option value="" className="bg-slate-950">UF</option>
-                            {STATES.map(s => <option key={s} value={s} className="bg-slate-950">{s}</option>)}
-                          </select>
-                          {errors.estado && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.estado}</span>}
-                        </div>
+                      {/* 3. Telefone */}
+                      <div id="field-whatsapp">
+                        <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                          Telefone / WhatsApp <span className="text-[#FFD400]">*</span>
+                        </label>
+                        <input
+                          type="tel"
+                          placeholder="(11) 98765-4321"
+                          value={form.whatsapp}
+                          onChange={e => setField("whatsapp", fmtPhone(e.target.value))}
+                          className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
+                            errors.whatsapp ? "border-red-500" : "border-slate-800"
+                          }`}
+                        />
+                        {errors.whatsapp && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.whatsapp}</span>}
                       </div>
 
-                      {/* Row 4: CNPJ (opcional) + Principal Objetivo */}
-                      <div className="grid sm:grid-cols-2 gap-3.5">
-                        <div>
-                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
-                            CNPJ <span className="text-slate-500 font-normal">(opcional)</span>
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="00.000.000/0000-00"
-                            value={form.cnpj}
-                            onChange={e => setField("cnpj", fmtCNPJ(e.target.value))}
-                            className="w-full h-11 bg-slate-950 border border-slate-800 text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors"
-                          />
-                        </div>
-
-                        <div id="field-objetivo">
-                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
-                            Principal objetivo <span className="text-[#FFD400]">*</span>
-                          </label>
-                          <select
-                            value={form.objetivo}
-                            onChange={e => setField("objetivo", e.target.value)}
-                            className={`w-full h-11 bg-slate-950 border text-white px-3 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] cursor-pointer ${
-                              errors.objetivo ? "border-red-500" : "border-slate-800"
-                            }`}
-                          >
-                            <option value="" className="bg-slate-950">Selecione...</option>
-                            {OBJECTIVE_OPTIONS.map(o => (
-                              <option key={o} value={o} className="bg-slate-950">{o}</option>
-                            ))}
-                          </select>
-                          {errors.objetivo && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.objetivo}</span>}
-                        </div>
+                      {/* 4. Nome da empresa */}
+                      <div id="field-clinica">
+                        <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                          Nome da empresa / clínica <span className="text-[#FFD400]">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Nome da sua clínica ou consultório"
+                          value={form.clinica}
+                          onChange={e => setField("clinica", e.target.value)}
+                          className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
+                            errors.clinica ? "border-red-500" : "border-slate-800"
+                          }`}
+                        />
+                        {errors.clinica && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.clinica}</span>}
                       </div>
 
-                      {/* Faturamento Mensal (Select com faixas EXATAS) */}
+                      {/* 5. Segmento */}
+                      <div id="field-segmento">
+                        <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                          Selecionar segmento <span className="text-[#FFD400]">*</span>
+                        </label>
+                        <select
+                          value={form.segmento}
+                          onChange={e => setField("segmento", e.target.value)}
+                          className={`w-full h-11 bg-slate-950 border text-white px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] cursor-pointer ${
+                            errors.segmento ? "border-red-500" : "border-slate-800"
+                          }`}
+                        >
+                          <option value="" className="bg-slate-950">Selecione o segmento...</option>
+                          {SEGMENTS.map(s => (
+                            <option key={s} value={s} className="bg-slate-950">{s}</option>
+                          ))}
+                        </select>
+                        {errors.segmento && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.segmento}</span>}
+                      </div>
+
+                      {/* 6. Faturamento */}
                       <div id="field-faturamento">
                         <label className="block text-[12px] font-bold text-slate-300 mb-1">
-                          Faturamento mensal da clínica <span className="text-[#FFD400]">*</span>
+                          Coloque seu faturamento atual <span className="text-[#FFD400]">*</span>
                         </label>
                         <select
                           value={form.faturamento}
@@ -582,7 +509,7 @@ export default function DentistLanding() {
                             errors.faturamento ? "border-red-500" : "border-slate-800"
                           }`}
                         >
-                          <option value="" className="bg-slate-950">Selecione a faixa de faturamento...</option>
+                          <option value="" className="bg-slate-950">Selecione...</option>
                           {REVENUE_TIERS.map(t => (
                             <option key={t.value} value={t.value} className="bg-slate-950">{t.label}</option>
                           ))}
@@ -591,41 +518,44 @@ export default function DentistLanding() {
                       </div>
 
                       {/* ════════════════════════════════════════════════════════════
-                          DYNAMIC QUALIFICATION QUESTION (PROMPT DIRECTIVE Item 6)
+                          CAIXAS OPCIONAIS DE INVESTIMENTO E CNPJ (ABRE AO SELECONAR FATURAMENTO)
                       ════════════════════════════════════════════════════════════ */}
-                      {form.faturamento && suggestedValue && (
-                        <div id="field-dispostoInvestir" className="p-3.5 rounded-lg bg-slate-950 border border-[#FFD400]/30 space-y-2.5 animate-fadeIn">
-                          <label className="block text-[12.5px] font-bold text-slate-200 leading-snug">
-                            Você está disposto a investir a partir de <span className="text-[#FFD400] font-black">{suggestedValue} por mês</span> para fortalecer sua presença digital e gerar mais oportunidades para sua clínica? <span className="text-[#FFD400]">*</span>
-                          </label>
-                          <div className="flex gap-4">
-                            <label className="flex items-center gap-2 cursor-pointer font-bold text-[13px] text-white">
-                              <input
-                                type="radio"
-                                name="dispostoInvestir"
-                                value="SIM"
-                                checked={form.dispostoInvestir === "SIM"}
-                                onChange={e => setField("dispostoInvestir", e.target.value)}
-                                className="w-4 h-4 accent-[#FFD400] cursor-pointer"
-                              />
-                              <span>SIM</span>
-                            </label>
+                      {form.faturamento && (
+                        <div className="space-y-3.5 pt-3 border-t border-slate-800 bg-slate-950/70 p-3.5 rounded-lg animate-fadeIn">
+                          <p className="text-[11px] font-bold text-[#FFD400] uppercase tracking-wider">
+                            Informações Opcionais
+                          </p>
 
-                            <label className="flex items-center gap-2 cursor-pointer font-bold text-[13px] text-white">
-                              <input
-                                type="radio"
-                                name="dispostoInvestir"
-                                value="NÃO"
-                                checked={form.dispostoInvestir === "NÃO"}
-                                onChange={e => setField("dispostoInvestir", e.target.value)}
-                                className="w-4 h-4 accent-[#FFD400] cursor-pointer"
-                              />
-                              <span>NÃO</span>
+                          {/* Investimento Opcional */}
+                          <div>
+                            <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                              Pretensão de investimento mensal <span className="text-slate-500 font-normal">(opcional)</span>
                             </label>
+                            <select
+                              value={form.investimento}
+                              onChange={e => setField("investimento", e.target.value)}
+                              className="w-full h-11 bg-slate-900 border border-slate-800 text-white px-3 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] cursor-pointer"
+                            >
+                              <option value="" className="bg-slate-950">Selecione a intenção de investimento...</option>
+                              <option value="ate-1500" className="bg-slate-950">Até R$ 1.500 / mês</option>
+                              <option value="1500-3000" className="bg-slate-950">De R$ 1.500 a R$ 3.000 / mês</option>
+                              <option value="acima-3000" className="bg-slate-950">Acima de R$ 3.000 / mês</option>
+                            </select>
                           </div>
-                          {errors.dispostoInvestir && (
-                            <span className="text-[11px] text-red-400 block">{errors.dispostoInvestir}</span>
-                          )}
+
+                          {/* CNPJ Opcional */}
+                          <div>
+                            <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                              CNPJ <span className="text-slate-500 font-normal">(opcional)</span>
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="00.000.000/0000-00"
+                              value={form.cnpj}
+                              onChange={e => setField("cnpj", fmtCNPJ(e.target.value))}
+                              className="w-full h-11 bg-slate-900 border border-slate-800 text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors"
+                            />
+                          </div>
                         </div>
                       )}
 
@@ -664,7 +594,7 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            02. DEPOIMENTOS / PROVA SOCIAL (CARROSSEL RESPONSIVO)
+            02. DEPOIMENTOS / PROVA SOCIAL
         ════════════════════════════════════════════════════════════ */}
         <section id="depoimentos" className="py-16 sm:py-24 bg-white text-[#0F172A] border-b border-slate-200">
           <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
@@ -750,7 +680,7 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            03. QUEM SOMOS (HISTÓRIA REAL & POSICIONAMENTO)
+            03. QUEM SOMOS
         ════════════════════════════════════════════════════════════ */}
         <section id="sobre" className="py-16 sm:py-24 bg-[#F8FAFC] text-[#0F172A] border-b border-slate-200">
           <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
@@ -832,7 +762,7 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            04. MÉTODO IDEAL (5 ETAPAS PROMPT DIRECTIVE Item 11)
+            04. MÉTODO IDEAL
         ════════════════════════════════════════════════════════════ */}
         <section id="metodo" className="py-16 sm:py-24 bg-[#0F172A] text-white border-b border-slate-800">
           <div className="max-w-[1140px] mx-auto px-5 sm:px-8">
@@ -881,7 +811,7 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            05. SOLUÇÕES / ENTREGÁVEIS (PROMPT DIRECTIVE Item 12)
+            05. SOLUÇÕES / ENTREGÁVEIS
         ════════════════════════════════════════════════════════════ */}
         <section id="solucoes" className="py-16 sm:py-24 bg-white text-[#0F172A]">
           <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
@@ -961,7 +891,7 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            06. FAQ & SEÇÃO FINAL (PROMPT DIRECTIVE Item 13 e 14)
+            06. FAQ & SEÇÃO FINAL
         ════════════════════════════════════════════════════════════ */}
         <section id="faq" className="py-16 sm:py-24 bg-[#0F172A] text-white border-t border-slate-800">
           <div className="max-w-[860px] mx-auto px-5 sm:px-8">
@@ -994,7 +924,7 @@ export default function DentistLanding() {
               ))}
             </div>
 
-            {/* Final Call Banner (Prompt Directive Item 14) */}
+            {/* Final Call Banner */}
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 sm:p-12 text-center space-y-5 shadow-xl">
               <h3 className="text-[24px] sm:text-[32px] font-black leading-[1.2] text-white max-w-lg mx-auto">
                 Vamos entender o que sua clínica precisa?
@@ -1019,7 +949,7 @@ export default function DentistLanding() {
       </main>
 
       {/* ════════════════════════════════════════════════════════════
-          FOOTER (PROMPT DIRECTIVE Item 15)
+          FOOTER
       ════════════════════════════════════════════════════════════ */}
       <footer className="py-10 bg-[#0A0F1D] border-t border-slate-800 text-slate-400 text-[13px]">
         <div className="max-w-[1240px] mx-auto px-5 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
@@ -1045,7 +975,7 @@ export default function DentistLanding() {
       </footer>
 
       {/* ════════════════════════════════════════════════════════════
-          MOBILE STICKY CTA (PROMPT DIRECTIVE Item 8)
+          MOBILE STICKY CTA
           Hidden when #formulario is in viewport!
       ════════════════════════════════════════════════════════════ */}
       {!formVisible && (
@@ -1087,7 +1017,7 @@ export default function DentistLanding() {
               </p>
               <h4 className="font-bold text-white text-[14px]">1. Coleta de Dados</h4>
               <p>
-                Os dados coletados em nosso formulário (como nome, WhatsApp, clínica, cidade, estado, CNPJ e faturamento) são fornecidos voluntariamente pelo usuário para fins de contato comercial e elaboração de proposta personalizada.
+                Os dados coletados em nosso formulário (como nome, e-mail, telefone, nome da empresa, segmento e faturamento) são fornecidos voluntariamente pelo usuário para fins de contato comercial e elaboração de proposta personalizada.
               </p>
               <h4 className="font-bold text-white text-[14px]">2. Uso das Informações</h4>
               <p>
