@@ -111,6 +111,7 @@ export default function DentistLanding() {
   const [scrolled, setScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [activeMetodo, setActiveMetodo] = useState<number | null>(0);
   const [formVisible, setFormVisible] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [utms, setUtms] = useState<Record<string, string>>({});
@@ -759,40 +760,150 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            04. MÉTODO IDEAL WITH SHADER BACKGROUND
+            04. MÉTODO IDEAL WITH 3D LOGO & STACKED HOVER REVEAL
         ════════════════════════════════════════════════════════════ */}
         <section id="metodo" className="relative bg-[#0F172A] text-white py-16 sm:py-24 border-b border-slate-800 overflow-hidden">
           <ShaderBackground className="absolute inset-0 opacity-30 pointer-events-none" />
 
-          <div className="max-w-[1140px] mx-auto px-5 sm:px-8 relative z-10">
-            <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
-              <span className="text-[#FFD400] font-extrabold text-[12px] uppercase tracking-widest bg-slate-800/90 px-3.5 py-1 rounded-full border border-slate-700 inline-block">
+          <div className="max-w-[1240px] mx-auto px-5 sm:px-8 relative z-10">
+            
+            {/* Section Header */}
+            <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16 space-y-3">
+              <span className="text-[#FFD400] font-extrabold text-[12px] uppercase tracking-widest bg-slate-800/90 px-3.5 py-1 rounded-full border border-slate-700 inline-block shadow-sm">
                 O Método IDEAL
               </span>
-              <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18] text-white">
+              <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18] text-white tracking-tight">
                 Como organizamos a evolução da sua presença digital
               </h2>
+              <p className="text-[14.5px] sm:text-[16px] text-slate-300 font-medium">
+                Passe o mouse sobre as etapas para revelar os detalhes do nosso processo.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-              {[
-                { letter: "I", title: "Imersão", desc: "Entendemos sua clínica, seus serviços, seu público e sua presença digital." },
-                { letter: "D", title: "Direção estratégica", desc: "Definimos prioridades, comunicação e soluções adequadas aos seus objetivos." },
-                { letter: "E", title: "Execução", desc: "Criamos os materiais e implementamos as entregas contratadas. Sua equipe recebe orientação para fornecer fotos e vídeos." },
-                { letter: "A", title: "Acompanhamento próximo", desc: "Organizamos aprovações e acompanhamos entregas e indicadores relacionados ao projeto." },
-                { letter: "L", title: "Lapidação contínua", desc: "Ajustamos a comunicação e as ações com base nos dados disponíveis e no retorno da sua equipe." },
-              ].map((m, i) => (
-                <div key={i} className="bg-slate-900/80 backdrop-blur-md border border-slate-800 p-5 rounded-xl space-y-2.5">
-                  <div className="w-10 h-10 rounded-lg bg-[#FFD400] text-[#0F172A] font-black text-[18px] flex items-center justify-center">
-                    {m.letter}
-                  </div>
-                  <h3 className="font-extrabold text-[15px] text-white">{m.letter} — {m.title}</h3>
-                  <p className="text-[12.5px] text-slate-300 leading-relaxed">{m.desc}</p>
+            {/* Split Grid Layout: Left 3D Logo | Right Stacked Hover Reveal */}
+            <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+              
+              {/* Left Column: 3D Gold Logo Showcase */}
+              <div className="lg:col-span-5 flex flex-col items-center justify-center relative group">
+                {/* Gold Radial Glow effect */}
+                <div className="absolute w-72 h-72 sm:w-96 sm:h-96 bg-[#FFD400]/15 rounded-full blur-3xl pointer-events-none group-hover:bg-[#FFD400]/25 transition-all duration-700" />
+                
+                <div className="relative z-10 p-6 sm:p-8 rounded-3xl bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.6)] flex items-center justify-center text-center">
+                  <img
+                    src="/metodo-3d-logo.png"
+                    alt="Logo Ideal Solutions 3D"
+                    className="w-64 sm:w-80 h-auto object-contain drop-shadow-[0_20px_35px_rgba(255,212,0,0.25)] group-hover:scale-105 transition-transform duration-500 ease-out"
+                  />
                 </div>
-              ))}
+              </div>
+
+              {/* Right Column: Stacked Método Steps with Hover Reveal */}
+              <div className="lg:col-span-7 space-y-3.5">
+                {[
+                  {
+                    letter: "I",
+                    step: "01",
+                    title: "Imersão",
+                    short: "Entendemos sua clínica, seus serviços, seu público e sua presença digital.",
+                    detail: "Analisamos seu posicionamento atual, concorrentes regionais, os diferenciais dos seus tratamentos e o perfil dos seus pacientes para alinhar a melhor estratégia de comunicação.",
+                    highlight: "Diagnóstico completo & Mapeamento de Oportunidades"
+                  },
+                  {
+                    letter: "D",
+                    step: "02",
+                    title: "Direção Estratégica",
+                    short: "Definimos prioridades, comunicação e soluções adequadas aos seus objetivos.",
+                    detail: "Mapeamos a jornada do paciente ideal e estruturamos as mensagens-chave, canais e formatos certos para atrair mais agendamentos de alto valor.",
+                    highlight: "Planejamento de Marca & Posicionamento Odontológico"
+                  },
+                  {
+                    letter: "E",
+                    step: "03",
+                    title: "Execução",
+                    short: "Criamos os materiais e orientamos sua equipe para produção de fotos e vídeos.",
+                    detail: "Desenvolvemos sua landing page de alta conversão com design autoral, configuramos rastreamento e fornecemos roteiros práticos para suas redes.",
+                    highlight: "Landing Page Exclusiva + Roteiros de Conteúdo"
+                  },
+                  {
+                    letter: "A",
+                    step: "04",
+                    title: "Acompanhamento Próximo",
+                    short: "Organizamos aprovações e acompanhamos entregas e indicadores.",
+                    detail: "Monitoramos constantemente o desempenho dos canais, otimizamos o fluxo de conversão de leads e prestamos suporte contínuo para sua equipe.",
+                    highlight: "Acompanhamento de Resultados & Alinhamentos"
+                  },
+                  {
+                    letter: "L",
+                    step: "05",
+                    title: "Lapidação Contínua",
+                    short: "Ajustamos a comunicação com base em dados e no retorno da sua equipe.",
+                    detail: "Refinamos continuamente anúncios, páginas e narrativas com base nos relatórios de performance e no feedback direto dos seus atendimentos.",
+                    highlight: "Otimização Constante de Performance"
+                  },
+                ].map((m, index) => {
+                  const isExpanded = activeMetodo === index;
+                  return (
+                    <div
+                      key={index}
+                      onMouseEnter={() => setActiveMetodo(index)}
+                      onClick={() => setActiveMetodo(index)}
+                      className={`group relative rounded-2xl border p-5 sm:p-6 transition-all duration-300 cursor-pointer ${
+                        isExpanded
+                          ? "bg-slate-900/90 border-[#FFD400] shadow-[0_10px_30px_rgba(255,212,0,0.15)] ring-1 ring-[#FFD400]/40"
+                          : "bg-slate-900/50 border-slate-800 hover:border-slate-700 hover:bg-slate-900/70"
+                      }`}
+                    >
+                      <div className="flex items-start gap-4">
+                        {/* Letter Badge */}
+                        <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center font-black text-[18px] sm:text-[20px] transition-all duration-300 flex-shrink-0 ${
+                          isExpanded
+                            ? "bg-[#FFD400] text-[#0F172A] shadow-[0_4px_14px_rgba(255,212,0,0.4)] scale-105"
+                            : "bg-slate-800 text-slate-300 group-hover:bg-slate-700 group-hover:text-white"
+                        }`}>
+                          {m.letter}
+                        </div>
+
+                        {/* Text Content */}
+                        <div className="flex-1 space-y-1">
+                          <div className="flex items-center justify-between">
+                            <h3 className={`font-black text-[17px] sm:text-[19px] transition-colors ${
+                              isExpanded ? "text-[#FFD400]" : "text-white group-hover:text-slate-200"
+                            }`}>
+                              {m.letter} — {m.title}
+                            </h3>
+                            <span className="text-[12px] font-extrabold text-slate-400 group-hover:text-slate-300">
+                              {m.step}
+                            </span>
+                          </div>
+
+                          <p className="text-[13.5px] sm:text-[14px] text-slate-300 font-medium leading-relaxed">
+                            {m.short}
+                          </p>
+
+                          {/* Hover Reveal Block */}
+                          <div className={`grid transition-all duration-300 ease-in-out ${
+                            isExpanded ? "grid-rows-[1fr] opacity-100 mt-3 pt-3 border-t border-slate-800/80" : "grid-rows-[0fr] opacity-0"
+                          }`}>
+                            <div className="overflow-hidden space-y-2">
+                              <p className="text-[13px] sm:text-[13.5px] text-slate-300 leading-relaxed">
+                                {m.detail}
+                              </p>
+                              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFD400]/10 border border-[#FFD400]/30 text-[#FFD400] text-[12px] font-extrabold mt-1">
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                <span>{m.highlight}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
             </div>
 
-            <p className="text-[12.5px] text-slate-400 text-center mt-8 italic">
+            <p className="text-[12.5px] text-slate-400 text-center mt-10 italic">
               Observação: O acompanhamento respeita o escopo e o período contratados. Projetos pontuais e serviços recorrentes têm formatos próprios.
             </p>
 
@@ -800,7 +911,7 @@ export default function DentistLanding() {
               <button
                 type="button"
                 onClick={() => scrollTo("#formulario")}
-                className="bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-7 py-3 rounded-full text-[14px] transition-all shadow-md inline-flex items-center gap-2"
+                className="bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-8 py-3.5 rounded-full text-[14.5px] transition-all shadow-lg active:scale-95 inline-flex items-center gap-2.5"
               >
                 Quero atrair mais pacientes
                 <ArrowRight className="w-4 h-4" />
