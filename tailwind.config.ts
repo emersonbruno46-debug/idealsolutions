@@ -12,24 +12,33 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: '2rem',
+			padding: {
+				DEFAULT: '1.25rem',
+				sm: '1.5rem',
+				lg: '2.5rem',
+			},
 			screens: {
-				'2xl': '1400px'
+				'2xl': '1240px'
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+			},
 			colors: {
+				brand: {
+					yellow: '#FFD400',
+					black: '#111111',
+					bg: '#F7F7F3',
+					surface: '#FFFFFF',
+					border: '#E9E9E5',
+					secondary: '#646464',
+				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
-				teal: {
-					DEFAULT: '#00A89E',
-					dark: '#008F87',
-					light: '#E0F7F5',
-					lighter: '#F0FBF9',
-				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
@@ -60,6 +69,8 @@ export default {
 				}
 			},
 			borderRadius: {
+				'4xl': '2rem',
+				'5xl': '2.5rem',
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'

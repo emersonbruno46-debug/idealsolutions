@@ -1,10 +1,10 @@
-import PremiumLanding from "./pages/PremiumLanding";
+import DentistLanding from "./pages/DentistLanding";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 function App() {
   return (
     <TooltipProvider>
-      <PremiumLanding />
+      <DentistLanding />
     </TooltipProvider>
   );
 }
