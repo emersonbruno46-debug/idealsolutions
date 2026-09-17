@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   ArrowRight, Menu, X, ChevronDown, Plus, Minus,
-  CheckCircle2, Check, Smartphone, Globe, Layers, ShieldCheck, Award, Star, Sparkles, TrendingUp
+  CheckCircle2, Check, Smartphone, Globe, Layers, ShieldCheck, Award, ChevronLeft, ChevronRight, Lock, FileText
 } from "lucide-react";
 
 /* ─── Smooth Scroll Helper ─── */
@@ -21,63 +21,144 @@ function fmtPhone(v: string) {
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
 }
 
-/* ─── Revenue Tiers ─── */
+/* ─── CNPJ Formatter ─── */
+function fmtCNPJ(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 14);
+  if (d.length <= 2) return d;
+  if (d.length <= 5) return `${d.slice(0, 2)}.${d.slice(2)}`;
+  if (d.length <= 8) return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5)}`;
+  if (d.length <= 12) return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8)}`;
+  return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8, 12)}-${d.slice(12)}`;
+}
+
+/* ─── Exact Revenue Tiers (Prompt Directive) ─── */
 const REVENUE_TIERS = [
-  { label: "Até R$ 10 mil/mês", value: "ate-10k" },
-  { label: "R$ 10k a R$ 30 mil/mês", value: "10k-30k" },
-  { label: "R$ 30k a R$ 60 mil/mês", value: "30k-60k" },
-  { label: "R$ 60k a R$ 100 mil/mês", value: "60k-100k" },
-  { label: "Acima de R$ 100 mil/mês", value: "acima-100k" },
+  { label: "Até R$ 10 mil", value: "ate-10k" },
+  { label: "R$ 10 mil a R$ 30 mil", value: "10k-30k" },
+  { label: "R$ 30 mil a R$ 60 mil", value: "30k-60k" },
+  { label: "R$ 60 mil a R$ 100 mil", value: "60k-100k" },
+  { label: "Acima de R$ 100 mil", value: "acima-100k" },
 ];
 
-/* ─── Segment Options ─── */
-const SEGMENTS = [
-  "Clínica Odontológica Multi-especialidades",
-  "Consultório Individual / Autônomo",
-  "Ortodontia & Alinhadores",
-  "Implantodontia & Reabilitação",
-  "Estética Dental & Lentes",
-  "Harmonização Orofacial",
-  "Outro segmento odontológico",
+/* ─── Dynamic Investment Qualification Mapping (Prompt Directive) ─── */
+const QUALIFICATION_VALUES: Record<string, string> = {
+  "ate-10k": "R$ 2.500",
+  "10k-30k": "R$ 3.000",
+  "30k-60k": "R$ 4.000",
+  "60k-100k": "R$ 5.000",
+  "acima-100k": "R$ 7.500",
+};
+
+/* ─── Main Objective Options ─── */
+const OBJECTIVE_OPTIONS = [
+  "Gestão e Estratégia Digital",
+  "Conteúdo para Instagram",
+  "Landing Page de Captação",
+  "Presença Digital Completa",
+  "Ainda não sei qual o melhor caminho",
 ];
 
-/* ─── FAQ Data ─── */
+/* ─── States List ─── */
+const STATES = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
+
+/* ─── FAQ Data (Corrected & Standardized) ─── */
 const FAQ_ITEMS = [
-  { q: "Vocês atendem todo o Brasil?", a: "Sim. Nosso atendimento é 100% remoto e estruturado para consultórios e clínicas em qualquer cidade ou estado do Brasil." },
-  { q: "Vocês atendem dentistas individuais e clínicas?", a: "Sim. Atendemos profissionais autônomos que querem consolidar autoridade e atrair pacientes particulares, e também clínicas com múltiplos consultórios." },
-  { q: "Preciso contratar todos os serviços?", a: "Não. Cada clínica tem uma prioridade. Você pode contratar apenas a landing page, a gestão do Instagram ou a estrutura integrada completa." },
-  { q: "Por que não há preços na página?", a: "Porque não acreditamos em pacotes genéricos. A proposta é construída sob medida para a realidade e o momento da sua clínica, apresentada após o diagnóstico inicial." },
-  { q: "Como funcionam fotos e vídeos?", a: "A clínica fornece a matéria-prima audiovisual. A Ideal orienta o que produzir e como produzir — roteiro, enquadramento e padrão visual." },
-  { q: "O que acontece depois que envio o formulário?", a: "Nossa equipe analisa o seu diagnóstico, entra em contato em até 1 dia útil, conduz uma call comercial e apresenta uma proposta personalizada." },
-  { q: "Existe fidelidade mínima?", a: "Serviços recorrentes normalmente têm período mínimo de 3 meses. Projetos pontuais têm formatos próprios." },
+  {
+    q: "Vocês atendem todo o Brasil?",
+    a: "Sim. Nosso atendimento é 100% remoto e estruturado para consultórios e clínicas em qualquer cidade ou estado do Brasil."
+  },
+  {
+    q: "Vocês atendem dentistas individuais e clínicas?",
+    a: "Sim. Atendemos profissionais autônomos que querem consolidar autoridade e atrair pacientes particulares, e também clínicas com múltiplos consultórios."
+  },
+  {
+    q: "Preciso contratar todos os serviços?",
+    a: "Não. Cada clínica tem uma prioridade. Você pode contratar apenas a landing page, a gestão do Instagram ou a estrutura integrada completa."
+  },
+  {
+    q: "Como é definido o investimento?",
+    a: "A solução e o valor do investimento dependem do escopo e das necessidades específicas da sua clínica. Apresentamos uma proposta personalizada após analisar as informações iniciais."
+  },
+  {
+    q: "Como funcionam fotos e vídeos?",
+    a: "A clínica fornece a matéria-prima audiovisual. A Ideal orienta o que produzir e como produzir — fornecendo roteiros, enquadramentos e diretrizes visuais."
+  },
+  {
+    q: "O que acontece depois que envio o formulário?",
+    a: "Nossa equipe analisa as informações enviadas e entra em contato em até 1 dia útil para agendar uma reunião inicial e apresentar um plano adequado."
+  },
+  {
+    q: "Existe fidelidade mínima?",
+    a: "Serviços recorrentes de gestão normalmente possuem um período mínimo acordado em contrato. Projetos pontuais têm formatos próprios de entrega."
+  }
+];
+
+/* ─── Testimonials Placeholders ─── */
+const TESTIMONIALS = [
+  {
+    author: "Consultório Odontológico de Ortodontia",
+    location: "São Paulo - SP",
+    text: "Estruturação da presença digital focada na atração de pacientes para tratamentos alinhadores e consultas particulares.",
+    type: "Projeto de Landing Page & Estratégia"
+  },
+  {
+    author: "Clínica Integrada de Implantodontia",
+    location: "Curitiba - PR",
+    text: "Alinhamento da comunicação e materiais digitais para destacar os diferenciais do corpo clínico e facilitar contatos diretos.",
+    type: "Gestão Digital & Conteúdo"
+  },
+  {
+    author: "Consultório de Estética Dental",
+    location: "Belo Horizonte - MG",
+    text: "Padronização visual e criação de canal de captação de leads qualificados para procedimentos estéticos de maior complexidade.",
+    type: "Presença Digital Completa"
+  }
 ];
 
 export default function DentistLanding() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [activeStep, setActiveStep] = useState<number | null>(0);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [formVisible, setFormVisible] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const [utms, setUtms] = useState<Record<string, string>>({});
 
-  // Form State - Single-column form with conditional logic
+  // Form State
   const [form, setForm] = useState({
     nome: "",
-    email: "",
-    whatsapp: "",
     clinica: "",
-    segmento: "",
-    faturamento: "",
+    whatsapp: "",
+    cidade: "",
+    estado: "",
+    instagram: "",
     cnpj: "",
-    investimento: "",
-    lgpd: false,
+    objetivo: "",
+    faturamento: "",
+    dispostoInvestir: "", // SIM / NÃO
+    lgpd: true,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // Check if current revenue tier requires CNPJ & Investment questions (<= 30k)
-  const showConditionalFields = form.faturamento === "ate-10k" || form.faturamento === "10k-30k";
+  // Suggested Investment based on selected revenue tier
+  const suggestedValue = QUALIFICATION_VALUES[form.faturamento] || "";
+
+  // IntersectionObserver for Mobile Sticky CTA visibility
+  useEffect(() => {
+    const formEl = document.getElementById("formulario");
+    if (!formEl) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setFormVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(formEl);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
@@ -94,8 +175,8 @@ export default function DentistLanding() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-  }, [menuOpen]);
+    document.body.style.overflow = (menuOpen || privacyOpen) ? "hidden" : "";
+  }, [menuOpen, privacyOpen]);
 
   const setField = (f: string, v: any) => {
     setForm(p => ({ ...p, [f]: v }));
@@ -105,16 +186,19 @@ export default function DentistLanding() {
   const validate = () => {
     const e: Record<string, string> = {};
     if (!form.nome.trim()) e.nome = "Informe seu nome";
-    if (!form.email.trim() || !form.email.includes("@")) e.email = "E-mail válido necessário";
-    if (form.whatsapp.replace(/\D/g, "").length < 10) e.whatsapp = "WhatsApp válido necessário";
-    if (!form.clinica.trim()) e.clinica = "Informe o nome da clínica";
-    if (!form.segmento) e.segmento = "Selecione o segmento";
-    if (!form.faturamento) e.faturamento = "Selecione o faturamento";
-    if (showConditionalFields) {
-      if (!form.cnpj) e.cnpj = "Informe se possui CNPJ";
-      if (!form.investimento) e.investimento = "Selecione a intenção de investimento";
+    if (!form.clinica.trim()) e.clinica = "Informe o nome da clínica / consultório";
+    if (form.whatsapp.replace(/\D/g, "").length < 10) e.whatsapp = "WhatsApp válido (com DDD) é obrigatório";
+    if (!form.cidade.trim()) e.cidade = "Informe sua cidade";
+    if (!form.estado) e.estado = "Selecione o estado (UF)";
+    if (!form.objetivo) e.objetivo = "Selecione seu objetivo principal";
+    if (!form.faturamento) e.faturamento = "Selecione a faixa de faturamento mensal";
+    
+    // Qualification question becomes mandatory after revenue is selected
+    if (form.faturamento && !form.dispostoInvestir) {
+      e.dispostoInvestir = "Selecione SIM ou NÃO para prosseguir";
     }
-    if (!form.lgpd) e.lgpd = "Aceite os termos para prosseguir";
+    
+    if (!form.lgpd) e.lgpd = "Aceite o uso dos dados para contato comercial";
     return e;
   };
 
@@ -123,16 +207,24 @@ export default function DentistLanding() {
     const errs = validate();
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
+      const firstErrKey = Object.keys(errs)[0];
+      const el = document.getElementById(`field-${firstErrKey}`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
     setLoading(true);
     try {
-      const payload = { ...form, ...utms, timestamp: new Date().toISOString() };
+      const payload = {
+        ...form,
+        investimento_sugerido: suggestedValue ? `${suggestedValue}/mês` : "",
+        ...utms,
+        timestamp: new Date().toISOString(),
+      };
       console.log("[Lead Ideal Solutions]:", payload);
-      await new Promise(r => setTimeout(r, 1200));
+      await new Promise(r => setTimeout(r, 1000));
       setSuccess(true);
     } catch {
-      alert("Erro ao enviar. Tente novamente.");
+      alert("Houve um problema ao enviar. Por favor, tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -146,29 +238,33 @@ export default function DentistLanding() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0E0E11] text-white selection:bg-[#FFD400] selection:text-black font-[Plus_Jakarta_Sans,sans-serif] overflow-x-hidden">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] selection:bg-[#FFD400] selection:text-black font-[Plus_Jakarta_Sans,sans-serif] overflow-x-hidden antialiased">
 
       {/* ════════════════════════════════════════════════════════════
-          HEADER / NAVBAR
+          HEADER
       ════════════════════════════════════════════════════════════ */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-250 ${
         scrolled
-          ? "bg-[#0E0E11]/95 backdrop-blur-md border-b border-white/10 shadow-2xl py-3.5"
-          : "bg-gradient-to-b from-[#FFD400] via-[#FFD400] to-[#FFD400] py-4"
+          ? "bg-[#0F172A]/95 backdrop-blur-md border-b border-slate-800 shadow-xl py-3.5"
+          : "bg-[#0F172A] py-4"
       }`}>
         <div className="max-w-[1240px] mx-auto px-5 sm:px-8 flex items-center justify-between">
-          <a href="#hero" onClick={e => { e.preventDefault(); scrollTo("#hero"); }} className="flex items-center gap-3 group">
+          <a
+            href="#hero"
+            onClick={e => { e.preventDefault(); scrollTo("#hero"); }}
+            className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD400]"
+          >
             <img
               src="/ideal-logo.png"
               alt="Ideal Solutions"
-              className={`h-9 sm:h-10 w-auto object-contain transition-all ${scrolled ? "brightness-100" : "brightness-0"}`}
+              className="h-8 sm:h-9 w-auto object-contain brightness-0 invert"
               onError={e => {
                 const t = e.currentTarget;
                 t.style.display = "none";
                 const parent = t.parentElement;
                 if (parent && !parent.querySelector(".logo-fallback")) {
                   const span = document.createElement("span");
-                  span.className = `logo-fallback text-xl font-black tracking-tighter ${scrolled ? "text-white" : "text-black"}`;
+                  span.className = "logo-fallback text-lg font-black tracking-tight text-white";
                   span.innerText = "IDEAL SOLUTIONS";
                   parent.appendChild(span);
                 }
@@ -182,11 +278,7 @@ export default function DentistLanding() {
                 key={l.href}
                 href={l.href}
                 onClick={e => { e.preventDefault(); scrollTo(l.href); }}
-                className={`text-[14px] font-bold transition-all duration-150 ${
-                  scrolled
-                    ? "text-white/70 hover:text-[#FFD400]"
-                    : "text-black/80 hover:text-black"
-                }`}
+                className="text-[14px] font-semibold text-slate-300 hover:text-[#FFD400] transition-colors"
               >
                 {l.label}
               </a>
@@ -196,12 +288,8 @@ export default function DentistLanding() {
           <div className="hidden md:block">
             <button
               type="button"
-              onClick={() => scrollTo("#hero")}
-              className={`px-6 py-3 rounded-full text-[14px] font-extrabold transition-all duration-200 shadow-md ${
-                scrolled
-                  ? "bg-[#FFD400] text-[#0E0E11] hover:brightness-105 hover:shadow-[0_0_20px_rgba(255,212,0,0.3)]"
-                  : "bg-[#0E0E11] text-white hover:bg-[#1F1F24]"
-              }`}
+              onClick={() => scrollTo("#formulario")}
+              className="bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-6 py-2.5 rounded-full text-[14px] transition-all shadow-sm active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD400]"
             >
               Quero mais informações
             </button>
@@ -210,8 +298,8 @@ export default function DentistLanding() {
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            className={`md:hidden p-2 rounded-lg ${scrolled ? "text-white hover:bg-white/10" : "text-black hover:bg-black/10"}`}
-            aria-label="Menu"
+            className="md:hidden p-2 rounded-lg text-white hover:bg-slate-800 transition-colors"
+            aria-label="Alternar Menu"
           >
             {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -220,23 +308,23 @@ export default function DentistLanding() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="fixed inset-0 z-40 bg-[#0E0E11]/98 flex flex-col justify-center px-8 pt-20">
+        <div className="fixed inset-0 z-40 bg-[#0F172A]/98 flex flex-col justify-center px-8 pt-20">
           <nav className="flex flex-col gap-6">
             {navLinks.map(l => (
               <a
                 key={l.href}
                 href={l.href}
                 onClick={e => { e.preventDefault(); scrollTo(l.href); setMenuOpen(false); }}
-                className="text-[26px] font-black text-white hover:text-[#FFD400]"
+                className="text-[24px] font-extrabold text-slate-100 hover:text-[#FFD400] transition-colors"
               >
                 {l.label}
               </a>
             ))}
-            <div className="pt-6">
+            <div className="pt-6 border-t border-slate-800">
               <button
                 type="button"
-                onClick={() => { scrollTo("#hero"); setMenuOpen(false); }}
-                className="w-full bg-[#FFD400] text-[#0E0E11] py-4 rounded-xl font-extrabold text-[16px]"
+                onClick={() => { scrollTo("#formulario"); setMenuOpen(false); }}
+                className="w-full bg-[#FFD400] text-[#0F172A] py-3.5 rounded-xl font-extrabold text-[15px]"
               >
                 Quero mais informações
               </button>
@@ -247,378 +335,61 @@ export default function DentistLanding() {
 
       <main>
         {/* ════════════════════════════════════════════════════════════
-            01. HERO SECTION — WARM GOLD CANVAS WITH EMBEDDED DARK FORM
+            01. HERO SECTION & FORMULÁRIO (PRIMEIRA DOBRA)
         ════════════════════════════════════════════════════════════ */}
-        <section id="hero" className="relative bg-gradient-to-b from-[#FFD400] via-[#FFD400] to-[#F5C200] text-[#0E0E11] pt-32 pb-16 sm:pt-36 sm:pb-24 border-b border-black/10 overflow-hidden">
-          {/* Subtle geometric pattern overlay */}
-          <div className="absolute inset-0 bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.04] pointer-events-none" />
-
-          <div className="max-w-[1240px] mx-auto px-5 sm:px-8 relative z-10">
-            <div className="grid lg:grid-cols-12 gap-10 lg:gap-8 items-start">
+        <section id="hero" className="bg-[#0F172A] text-white pt-28 pb-16 sm:pt-36 sm:pb-20 border-b border-slate-800">
+          <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
+            <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start">
               
-              {/* Left Column: Headlines & Pillars */}
-              <div className="lg:col-span-7 space-y-6 lg:pr-4">
-                <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#0E0E11] text-white text-[12px] font-extrabold tracking-wide uppercase shadow-lg">
-                  <Sparkles className="w-3.5 h-3.5 text-[#FFD400]" />
+              {/* Left Column: Headline, Subtitle & Value Props */}
+              <div className="lg:col-span-6 space-y-6 lg:pt-2">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-[#FFD400] text-[12px] font-bold uppercase tracking-wider">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" />
                   <span>Presença Digital Odontológica</span>
                 </div>
 
-                <h1 className="text-[34px] sm:text-[48px] lg:text-[56px] font-black leading-[1.08] tracking-[-0.03em] uppercase text-[#0E0E11]">
-                  FAZEMOS O SEU CONSULTÓRIO VENDER MAIS DE{" "}
-                  <span className="bg-[#0E0E11] text-[#FFD400] px-3.5 py-1 inline-block rounded-lg shadow-xl">
-                    PACIENTES PARTICULARES
-                  </span>
+                <h1 className="text-[30px] sm:text-[42px] lg:text-[48px] font-black leading-[1.12] tracking-tight text-white">
+                  Marketing para atrair mais{" "}
+                  <span className="text-[#FFD400] font-black underline decoration-[#FFD400]/40 underline-offset-4">
+                    pacientes particulares
+                  </span>{" "}
+                  para sua clínica.
                 </h1>
 
-                <p className="text-[17px] sm:text-[20px] font-medium text-[#0E0E11]/85 leading-[1.5] max-w-xl">
-                  Agende um diagnóstico gratuito e descubra como transformamos o marketing da sua clínica em uma máquina contínua de atração de novos pacientes.
+                <p className="text-[16px] sm:text-[18px] text-slate-300 font-medium leading-relaxed">
+                  Unimos estratégia, conteúdo para Instagram e landing pages para destacar os diferenciais da sua clínica e facilitar novos contatos.
                 </p>
 
-                {/* Checkmark List */}
-                <div className="space-y-3.5 pt-2">
-                  <div className="flex items-center gap-3.5 text-[15px] sm:text-[16px] font-extrabold text-[#0E0E11]">
-                    <div className="w-7 h-7 rounded-lg bg-[#0E0E11] text-[#00FF38] flex items-center justify-center flex-shrink-0 shadow-md">
+                {/* 3 Short Arguments (Prompt Directive) */}
+                <div className="space-y-3 pt-2">
+                  <div className="flex items-center gap-3 text-[14px] sm:text-[15px] font-semibold text-slate-200">
+                    <div className="w-6 h-6 rounded-full bg-[#FFD400]/15 text-[#FFD400] flex items-center justify-center flex-shrink-0">
                       <Check className="w-4 h-4 stroke-[3]" />
                     </div>
-                    <span>Marketing focado em CONSULTAS PARTICULARES</span>
+                    <span>Foco em clínicas e consultórios odontológicos.</span>
                   </div>
 
-                  <div className="flex items-center gap-3.5 text-[15px] sm:text-[16px] font-extrabold text-[#0E0E11]">
-                    <div className="w-7 h-7 rounded-lg bg-[#0E0E11] text-[#00FF38] flex items-center justify-center flex-shrink-0 shadow-md">
+                  <div className="flex items-center gap-3 text-[14px] sm:text-[15px] font-semibold text-slate-200">
+                    <div className="w-6 h-6 rounded-full bg-[#FFD400]/15 text-[#FFD400] flex items-center justify-center flex-shrink-0">
                       <Check className="w-4 h-4 stroke-[3]" />
                     </div>
-                    <span>Especialistas exclusivos no ramo da ODONTOLOGIA</span>
+                    <span>Estratégia, conteúdo e páginas de captação.</span>
                   </div>
 
-                  <div className="flex items-center gap-3.5 text-[15px] sm:text-[16px] font-extrabold text-[#0E0E11]">
-                    <div className="w-7 h-7 rounded-lg bg-[#0E0E11] text-[#00FF38] flex items-center justify-center flex-shrink-0 shadow-md">
+                  <div className="flex items-center gap-3 text-[14px] sm:text-[15px] font-semibold text-slate-200">
+                    <div className="w-6 h-6 rounded-full bg-[#FFD400]/15 text-[#FFD400] flex items-center justify-center flex-shrink-0">
                       <Check className="w-4 h-4 stroke-[3]" />
                     </div>
-                    <span>Atendimento personalizado para todo o BRASIL</span>
+                    <span>Atendimento em todo o Brasil.</span>
                   </div>
                 </div>
 
-                {/* CTA Button */}
+                {/* Desktop Action Button */}
                 <div className="pt-4 hidden lg:block">
                   <button
                     type="button"
-                    onClick={() => {
-                      const input = document.getElementById("form-nome");
-                      if (input) input.focus();
-                    }}
-                    className="inline-flex items-center gap-3 bg-[#0E0E11] text-white hover:bg-[#1F1F24] font-black px-8 py-4.5 rounded-xl text-[16px] transition-all duration-200 shadow-2xl hover:translate-x-1"
-                  >
-                    Quero resultados como esse
-                    <ArrowRight className="w-5 h-5 text-[#FFD400]" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Right Column: FORM CARD */}
-              <div className="lg:col-span-5">
-                <div className="bg-[#121215] rounded-2xl p-6 sm:p-8 text-white shadow-2xl border border-white/10 relative overflow-hidden backdrop-blur-xl">
-                  <div className="absolute top-0 right-0 w-36 h-36 bg-[#FFD400]/10 rounded-full blur-3xl pointer-events-none" />
-
-                  {success ? (
-                    <div className="py-12 text-center space-y-4">
-                      <div className="w-16 h-16 rounded-full bg-[#00E676]/20 border border-[#00E676] flex items-center justify-center mx-auto text-[#00E676]">
-                        <CheckCircle2 className="w-10 h-10" />
-                      </div>
-                      <h3 className="text-[24px] font-black text-white">Diagnóstico Solicitado!</h3>
-                      <p className="text-white/70 text-[14px] leading-relaxed">
-                        Recebemos os dados da sua clínica. Nossa equipe entrará em contato em até <strong className="text-white">1 dia útil</strong>.
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSuccess(false);
-                          setForm({ nome: "", email: "", whatsapp: "", clinica: "", segmento: "", faturamento: "", cnpj: "", investimento: "", lgpd: false });
-                        }}
-                        className="text-[13px] text-[#FFD400] underline font-bold pt-4 block mx-auto"
-                      >
-                        Enviar novo formulário
-                      </button>
-                    </div>
-                  ) : (
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      <div className="border-b border-white/10 pb-3 mb-2">
-                        <h3 className="text-[18px] font-black text-white text-center lg:text-left tracking-tight">
-                          Preencha para receber o diagnóstico
-                        </h3>
-                        <p className="text-[12px] text-white/50 text-center lg:text-left mt-0.5">
-                          Atendimento consultivo rápido em até 24h.
-                        </p>
-                      </div>
-
-                      {/* 1. Nome */}
-                      <div>
-                        <input
-                          id="form-nome"
-                          type="text"
-                          placeholder="Seu nome *"
-                          value={form.nome}
-                          onChange={e => setField("nome", e.target.value)}
-                          className={`w-full h-12 bg-[#1C1C22] border text-white placeholder-white/40 px-4 rounded-xl text-[14px] outline-none focus:border-[#FFD400] transition-colors ${
-                            errors.nome ? "border-red-500 bg-red-500/10" : "border-white/10"
-                          }`}
-                        />
-                        {errors.nome && <span className="text-[11px] text-red-400 mt-1 block">{errors.nome}</span>}
-                      </div>
-
-                      {/* 2. E-mail */}
-                      <div>
-                        <input
-                          type="email"
-                          placeholder="Seu melhor e-mail *"
-                          value={form.email}
-                          onChange={e => setField("email", e.target.value)}
-                          className={`w-full h-12 bg-[#1C1C22] border text-white placeholder-white/40 px-4 rounded-xl text-[14px] outline-none focus:border-[#FFD400] transition-colors ${
-                            errors.email ? "border-red-500 bg-red-500/10" : "border-white/10"
-                          }`}
-                        />
-                        {errors.email && <span className="text-[11px] text-red-400 mt-1 block">{errors.email}</span>}
-                      </div>
-
-                      {/* 3. Telefone / WhatsApp */}
-                      <div>
-                        <input
-                          type="tel"
-                          placeholder="🇧🇷 Telefone / WhatsApp *"
-                          value={form.whatsapp}
-                          onChange={e => setField("whatsapp", fmtPhone(e.target.value))}
-                          className={`w-full h-12 bg-[#1C1C22] border text-white placeholder-white/40 px-4 rounded-xl text-[14px] outline-none focus:border-[#FFD400] transition-colors ${
-                            errors.whatsapp ? "border-red-500 bg-red-500/10" : "border-white/10"
-                          }`}
-                        />
-                        {errors.whatsapp && <span className="text-[11px] text-red-400 mt-1 block">{errors.whatsapp}</span>}
-                      </div>
-
-                      {/* 4. Nome da clínica */}
-                      <div>
-                        <input
-                          type="text"
-                          placeholder="Nome da clínica ou consultório *"
-                          value={form.clinica}
-                          onChange={e => setField("clinica", e.target.value)}
-                          className={`w-full h-12 bg-[#1C1C22] border text-white placeholder-white/40 px-4 rounded-xl text-[14px] outline-none focus:border-[#FFD400] transition-colors ${
-                            errors.clinica ? "border-red-500 bg-red-500/10" : "border-white/10"
-                          }`}
-                        />
-                        {errors.clinica && <span className="text-[11px] text-red-400 mt-1 block">{errors.clinica}</span>}
-                      </div>
-
-                      {/* 5. Selecionar segmento */}
-                      <div>
-                        <label className="block text-[12px] font-bold text-white/70 mb-1">Selecionar segmento *</label>
-                        <select
-                          value={form.segmento}
-                          onChange={e => setField("segmento", e.target.value)}
-                          className={`w-full h-12 bg-[#1C1C22] border text-white px-4 rounded-xl text-[14px] outline-none focus:border-[#FFD400] transition-colors cursor-pointer ${
-                            errors.segmento ? "border-red-500 bg-red-500/10" : "border-white/10"
-                          }`}
-                        >
-                          <option value="" className="bg-[#1C1C22]">Selecione o segmento...</option>
-                          {SEGMENTS.map(s => (
-                            <option key={s} value={s} className="bg-[#1C1C22]">{s}</option>
-                          ))}
-                        </select>
-                        {errors.segmento && <span className="text-[11px] text-red-400 mt-1 block">{errors.segmento}</span>}
-                      </div>
-
-                      {/* 6. Coloque seu faturamento atual */}
-                      <div>
-                        <label className="block text-[12px] font-bold text-white/70 mb-1">Coloque seu faturamento atual *</label>
-                        <select
-                          value={form.faturamento}
-                          onChange={e => setField("faturamento", e.target.value)}
-                          className={`w-full h-12 bg-[#1C1C22] border text-white px-4 rounded-xl text-[14px] outline-none focus:border-[#FFD400] transition-colors cursor-pointer ${
-                            errors.faturamento ? "border-red-500 bg-red-500/10" : "border-white/10"
-                          }`}
-                        >
-                          <option value="" className="bg-[#1C1C22]">Selecione...</option>
-                          {REVENUE_TIERS.map(t => (
-                            <option key={t.value} value={t.value} className="bg-[#1C1C22]">{t.label}</option>
-                          ))}
-                        </select>
-                        {errors.faturamento && <span className="text-[11px] text-red-400 mt-1 block">{errors.faturamento}</span>}
-                      </div>
-
-                      {/* 7. CONDITIONAL FIELDS: Only for "Até R$ 10k" and "R$ 10k a R$ 30k" */}
-                      {showConditionalFields && (
-                        <div className="space-y-3.5 pt-3 border-t border-white/10 bg-white/5 p-4 rounded-xl">
-                          <p className="text-[11px] font-extrabold text-[#FFD400] uppercase tracking-wider flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" />
-                            Perguntas Complementares
-                          </p>
-
-                          <div>
-                            <label className="block text-[12px] font-bold text-white/80 mb-1">Possui CNPJ ativo? *</label>
-                            <select
-                              value={form.cnpj}
-                              onChange={e => setField("cnpj", e.target.value)}
-                              className={`w-full h-11 bg-[#1C1C22] border text-white px-3 rounded-lg text-[13px] outline-none focus:border-[#FFD400] ${
-                                errors.cnpj ? "border-red-500" : "border-white/10"
-                              }`}
-                            >
-                              <option value="">Selecione...</option>
-                              <option value="sim">Sim, possuo CNPJ ativo</option>
-                              <option value="nao">Não, atuo como Pessoa Física (CPF)</option>
-                            </select>
-                            {errors.cnpj && <span className="text-[11px] text-red-400 mt-1 block">{errors.cnpj}</span>}
-                          </div>
-
-                          <div>
-                            <label className="block text-[12px] font-bold text-white/80 mb-1">Pretensão de investimento mensal no marketing *</label>
-                            <select
-                              value={form.investimento}
-                              onChange={e => setField("investimento", e.target.value)}
-                              className={`w-full h-11 bg-[#1C1C22] border text-white px-3 rounded-lg text-[13px] outline-none focus:border-[#FFD400] ${
-                                errors.investimento ? "border-red-500" : "border-white/10"
-                              }`}
-                            >
-                              <option value="">Selecione...</option>
-                              <option value="ate-1500">Até R$ 1.500 / mês</option>
-                              <option value="1500-3000">De R$ 1.500 a R$ 3.000 / mês</option>
-                              <option value="acima-3000">Acima de R$ 3.000 / mês</option>
-                            </select>
-                            {errors.investimento && <span className="text-[11px] text-red-400 mt-1 block">{errors.investimento}</span>}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* LGPD Checkbox */}
-                      <div className="pt-2">
-                        <label className="flex items-start gap-2.5 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={form.lgpd}
-                            onChange={e => setField("lgpd", e.target.checked)}
-                            className="mt-1 w-4 h-4 accent-[#00E676] rounded cursor-pointer"
-                          />
-                          <span className="text-[11px] text-white/60 leading-tight">
-                            Concordo em fornecer meus dados para que a Ideal Solutions entre em contato comercial.
-                          </span>
-                        </label>
-                        {errors.lgpd && <span className="text-[11px] text-red-400 mt-1 block">{errors.lgpd}</span>}
-                      </div>
-
-                      {/* SUBMIT BUTTON */}
-                      <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full h-14 bg-[#00E676] hover:bg-[#00C853] text-[#0E0E11] font-black text-[15px] sm:text-[16px] rounded-xl transition-all shadow-[0_10px_30px_rgba(0,230,118,0.3)] active:scale-[0.99] flex items-center justify-center gap-2 mt-4 uppercase tracking-tight"
-                      >
-                        {loading ? "Enviando diagnóstico..." : "Quero vender mais investindo menos"}
-                      </button>
-                    </form>
-                  )}
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* ════════════════════════════════════════════════════════════
-            02. DEPOIMENTOS / CASE STUDIES — OBSIDIAN DARK (#0E0E11)
-        ════════════════════════════════════════════════════════════ */}
-        <section id="depoimentos" className="py-20 sm:py-28 bg-[#0E0E11] text-white border-b border-white/10 relative">
-          <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-              <span className="text-[#FFD400] font-black text-[12px] uppercase tracking-widest bg-[#FFD400]/10 px-4 py-1.5 rounded-full border border-[#FFD400]/30 inline-block">
-                Prova Social & Depoimentos
-              </span>
-              <h2 className="text-[28px] sm:text-[42px] font-black leading-[1.15] tracking-tight">
-                Resultados reais para dentistas e clínicas em todo o país
-              </h2>
-              <p className="text-[16px] text-white/60">
-                Veja o impacto de uma presença digital posicionada com inteligência e elegância.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                {
-                  doc: "Dra. Gisele Viana",
-                  spec: "Cirurgiã-Dentista · Consultório & Reabilitação",
-                  cidade: "São Paulo - SP",
-                  dep: "A reformulação da nossa comunicação e da landing page permitiu que pacientes de alto valor entendessem a tecnologia que entregamos antes mesmo da primeira consulta presencial.",
-                  rating: 5
-                },
-                {
-                  doc: "Dr. Lucas Ferreira",
-                  spec: "Implantodontista & Estética",
-                  cidade: "Curitiba - PR",
-                  dep: "Antes dependia quase 100% de indicação boca a boca. Com a estrutura criada pela Ideal Solutions, atrai pacientes prontos para fechar tratamentos de maior valor.",
-                  rating: 5
-                },
-                {
-                  doc: "Dra. Renata Souza",
-                  spec: "Ortodontista & Alinhadores",
-                  cidade: "Belo Horizonte - MG",
-                  dep: "Equipes de marketing comuns não entendem a rotina de um consultório odontológico. A Ideal trouxe clareza, alinhamento visual impecável e leads realmente qualificados.",
-                  rating: 5
-                },
-              ].map((t, i) => (
-                <div key={i} className="bg-[#16161D] border border-white/10 rounded-2xl p-7 flex flex-col justify-between hover:border-[#FFD400]/40 transition-all hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-                  <div className="space-y-4">
-                    <div className="flex gap-1 text-[#FFD400]">
-                      {[...Array(t.rating)].map((_, r) => (
-                        <Star key={r} className="w-4 h-4 fill-[#FFD400]" />
-                      ))}
-                    </div>
-                    <p className="text-[14px] text-white/80 leading-relaxed italic">
-                      "{t.dep}"
-                    </p>
-                  </div>
-                  <div className="pt-6 border-t border-white/10 mt-6">
-                    <h4 className="font-extrabold text-[16px] text-white">{t.doc}</h4>
-                    <p className="text-[12px] text-[#FFD400] font-semibold">{t.spec}</p>
-                    <p className="text-[11px] text-white/40">{t.cidade}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-14 text-center">
-              <button
-                type="button"
-                onClick={() => scrollTo("#hero")}
-                className="bg-[#FFD400] text-[#0E0E11] hover:brightness-105 font-extrabold px-8 py-4 rounded-full text-[15px] transition-all shadow-lg inline-flex items-center gap-2"
-              >
-                Quero mais informações
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* ════════════════════════════════════════════════════════════
-            03. QUEM SOMOS / POSICIONAMENTO — PURE WHITE (#FFFFFF)
-        ════════════════════════════════════════════════════════════ */}
-        <section id="sobre" className="py-20 sm:py-28 bg-white text-[#0E0E11]">
-          <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
-            <div className="grid lg:grid-cols-12 gap-12 items-center">
-              
-              <div className="lg:col-span-6 space-y-6">
-                <span className="text-[#0E0E11] font-black text-[12px] uppercase tracking-widest bg-[#FFD400] px-4 py-1.5 rounded-full inline-block shadow-sm">
-                  Quem Somos
-                </span>
-                <h2 className="text-[30px] sm:text-[44px] font-black leading-[1.12] tracking-tight text-[#0E0E11]">
-                  Especialistas em posicionar consultórios odontológicos com autoridade.
-                </h2>
-                <p className="text-[16px] text-slate-700 leading-relaxed">
-                  A Ideal Solutions nasceu para resolver uma dor crônica da odontologia: agências genéricas que gastam verba com posts que não geram consultas de alto valor.
-                </p>
-                <p className="text-[16px] text-slate-800 font-semibold leading-relaxed">
-                  Nós entendemos a regulamentação odontológica, os tratamentos de alta margem e a jornada de decisão do paciente particular.
-                </p>
-
-                <div className="pt-2">
-                  <button
-                    type="button"
-                    onClick={() => scrollTo("#hero")}
-                    className="bg-[#0E0E11] text-[#FFD400] hover:bg-[#1F1F24] font-black px-8 py-4 rounded-full text-[15px] transition-all shadow-md inline-flex items-center gap-2"
+                    onClick={() => scrollTo("#formulario")}
+                    className="inline-flex items-center gap-2.5 bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-7 py-3.5 rounded-xl text-[15px] transition-all shadow-md active:scale-95"
                   >
                     Quero mais informações
                     <ArrowRight className="w-4 h-4" />
@@ -626,45 +397,430 @@ export default function DentistLanding() {
                 </div>
               </div>
 
-              {/* Pillars Cards on White BG */}
+              {/* Right Column: FORM CARD WITH PERMANENT LABELS & DYNAMIC QUALIFICATION */}
+              <div className="lg:col-span-6" id="formulario" style={{ scrollMarginTop: "100px" }}>
+                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-7 text-white shadow-2xl">
+                  
+                  {success ? (
+                    <div className="py-10 text-center space-y-4">
+                      <div className="w-14 h-14 rounded-full bg-[#FFD400]/15 border border-[#FFD400]/40 flex items-center justify-center mx-auto text-[#FFD400]">
+                        <CheckCircle2 className="w-8 h-8" />
+                      </div>
+                      <h3 className="text-[22px] font-extrabold text-white">Informações Enviadas!</h3>
+                      <p className="text-slate-300 text-[14px] max-w-sm mx-auto leading-relaxed">
+                        Agradecemos o contato. Nossa equipe analisará os dados e entrará em contato em <strong className="text-white">até 1 dia útil</strong>.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSuccess(false);
+                          setForm({ nome: "", clinica: "", whatsapp: "", cidade: "", estado: "", instagram: "", cnpj: "", objetivo: "", faturamento: "", dispostoInvestir: "", lgpd: true });
+                        }}
+                        className="text-[13px] text-[#FFD400] underline font-bold pt-2 block mx-auto"
+                      >
+                        Preencher novamente
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                      <div className="border-b border-slate-800 pb-3 mb-1">
+                        <h3 className="text-[18px] font-extrabold text-white tracking-tight">
+                          Conte um pouco sobre sua clínica.
+                        </h3>
+                        <p className="text-[13px] text-slate-400 mt-0.5">
+                          Preencha as informações abaixo. Nossa equipe entrará em contato em <strong className="text-slate-300">até 1 dia útil</strong>.
+                        </p>
+                      </div>
+
+                      {/* Row 1: Nome + Clínica */}
+                      <div className="grid sm:grid-cols-2 gap-3.5">
+                        <div id="field-nome">
+                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                            Nome Completo <span className="text-[#FFD400]">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="Dr. Roberto Mendes"
+                            value={form.nome}
+                            onChange={e => setField("nome", e.target.value)}
+                            className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
+                              errors.nome ? "border-red-500" : "border-slate-800"
+                            }`}
+                          />
+                          {errors.nome && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.nome}</span>}
+                        </div>
+
+                        <div id="field-clinica">
+                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                            Clínica / Consultório <span className="text-[#FFD400]">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="Mendes Odontologia"
+                            value={form.clinica}
+                            onChange={e => setField("clinica", e.target.value)}
+                            className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
+                              errors.clinica ? "border-red-500" : "border-slate-800"
+                            }`}
+                          />
+                          {errors.clinica && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.clinica}</span>}
+                        </div>
+                      </div>
+
+                      {/* Row 2: WhatsApp + Instagram */}
+                      <div className="grid sm:grid-cols-2 gap-3.5">
+                        <div id="field-whatsapp">
+                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                            WhatsApp (com DDD) <span className="text-[#FFD400]">*</span>
+                          </label>
+                          <input
+                            type="tel"
+                            placeholder="(11) 98765-4321"
+                            value={form.whatsapp}
+                            onChange={e => setField("whatsapp", fmtPhone(e.target.value))}
+                            className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
+                              errors.whatsapp ? "border-red-500" : "border-slate-800"
+                            }`}
+                          />
+                          {errors.whatsapp && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.whatsapp}</span>}
+                        </div>
+
+                        <div>
+                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                            Instagram ou Site <span className="text-slate-500 font-normal">(opcional)</span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="@suaclinica ou site.com.br"
+                            value={form.instagram}
+                            onChange={e => setField("instagram", e.target.value)}
+                            className="w-full h-11 bg-slate-950 border border-slate-800 text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Row 3: Cidade + Estado + CNPJ */}
+                      <div className="grid sm:grid-cols-3 gap-3.5">
+                        <div className="sm:col-span-2" id="field-cidade">
+                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                            Cidade <span className="text-[#FFD400]">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="São Paulo"
+                            value={form.cidade}
+                            onChange={e => setField("cidade", e.target.value)}
+                            className={`w-full h-11 bg-slate-950 border text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors ${
+                              errors.cidade ? "border-red-500" : "border-slate-800"
+                            }`}
+                          />
+                          {errors.cidade && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.cidade}</span>}
+                        </div>
+
+                        <div id="field-estado">
+                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                            UF <span className="text-[#FFD400]">*</span>
+                          </label>
+                          <select
+                            value={form.estado}
+                            onChange={e => setField("estado", e.target.value)}
+                            className={`w-full h-11 bg-slate-950 border text-white px-2.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] cursor-pointer ${
+                              errors.estado ? "border-red-500" : "border-slate-800"
+                            }`}
+                          >
+                            <option value="" className="bg-slate-950">UF</option>
+                            {STATES.map(s => <option key={s} value={s} className="bg-slate-950">{s}</option>)}
+                          </select>
+                          {errors.estado && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.estado}</span>}
+                        </div>
+                      </div>
+
+                      {/* Row 4: CNPJ (opcional) + Principal Objetivo */}
+                      <div className="grid sm:grid-cols-2 gap-3.5">
+                        <div>
+                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                            CNPJ <span className="text-slate-500 font-normal">(opcional)</span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="00.000.000/0000-00"
+                            value={form.cnpj}
+                            onChange={e => setField("cnpj", fmtCNPJ(e.target.value))}
+                            className="w-full h-11 bg-slate-950 border border-slate-800 text-white placeholder-slate-500 px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] transition-colors"
+                          />
+                        </div>
+
+                        <div id="field-objetivo">
+                          <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                            Principal objetivo <span className="text-[#FFD400]">*</span>
+                          </label>
+                          <select
+                            value={form.objetivo}
+                            onChange={e => setField("objetivo", e.target.value)}
+                            className={`w-full h-11 bg-slate-950 border text-white px-3 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] cursor-pointer ${
+                              errors.objetivo ? "border-red-500" : "border-slate-800"
+                            }`}
+                          >
+                            <option value="" className="bg-slate-950">Selecione...</option>
+                            {OBJECTIVE_OPTIONS.map(o => (
+                              <option key={o} value={o} className="bg-slate-950">{o}</option>
+                            ))}
+                          </select>
+                          {errors.objetivo && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.objetivo}</span>}
+                        </div>
+                      </div>
+
+                      {/* Faturamento Mensal (Select com faixas EXATAS) */}
+                      <div id="field-faturamento">
+                        <label className="block text-[12px] font-bold text-slate-300 mb-1">
+                          Faturamento mensal da clínica <span className="text-[#FFD400]">*</span>
+                        </label>
+                        <select
+                          value={form.faturamento}
+                          onChange={e => setField("faturamento", e.target.value)}
+                          className={`w-full h-11 bg-slate-950 border text-white px-3.5 rounded-lg text-[13.5px] outline-none focus:border-[#FFD400] cursor-pointer ${
+                            errors.faturamento ? "border-red-500" : "border-slate-800"
+                          }`}
+                        >
+                          <option value="" className="bg-slate-950">Selecione a faixa de faturamento...</option>
+                          {REVENUE_TIERS.map(t => (
+                            <option key={t.value} value={t.value} className="bg-slate-950">{t.label}</option>
+                          ))}
+                        </select>
+                        {errors.faturamento && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.faturamento}</span>}
+                      </div>
+
+                      {/* ════════════════════════════════════════════════════════════
+                          DYNAMIC QUALIFICATION QUESTION (PROMPT DIRECTIVE Item 6)
+                      ════════════════════════════════════════════════════════════ */}
+                      {form.faturamento && suggestedValue && (
+                        <div id="field-dispostoInvestir" className="p-3.5 rounded-lg bg-slate-950 border border-[#FFD400]/30 space-y-2.5 animate-fadeIn">
+                          <label className="block text-[12.5px] font-bold text-slate-200 leading-snug">
+                            Você está disposto a investir a partir de <span className="text-[#FFD400] font-black">{suggestedValue} por mês</span> para fortalecer sua presença digital e gerar mais oportunidades para sua clínica? <span className="text-[#FFD400]">*</span>
+                          </label>
+                          <div className="flex gap-4">
+                            <label className="flex items-center gap-2 cursor-pointer font-bold text-[13px] text-white">
+                              <input
+                                type="radio"
+                                name="dispostoInvestir"
+                                value="SIM"
+                                checked={form.dispostoInvestir === "SIM"}
+                                onChange={e => setField("dispostoInvestir", e.target.value)}
+                                className="w-4 h-4 accent-[#FFD400] cursor-pointer"
+                              />
+                              <span>SIM</span>
+                            </label>
+
+                            <label className="flex items-center gap-2 cursor-pointer font-bold text-[13px] text-white">
+                              <input
+                                type="radio"
+                                name="dispostoInvestir"
+                                value="NÃO"
+                                checked={form.dispostoInvestir === "NÃO"}
+                                onChange={e => setField("dispostoInvestir", e.target.value)}
+                                className="w-4 h-4 accent-[#FFD400] cursor-pointer"
+                              />
+                              <span>NÃO</span>
+                            </label>
+                          </div>
+                          {errors.dispostoInvestir && (
+                            <span className="text-[11px] text-red-400 block">{errors.dispostoInvestir}</span>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Privacy & LGPD Checkbox */}
+                      <div className="pt-1">
+                        <label className="flex items-start gap-2.5 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={form.lgpd}
+                            onChange={e => setField("lgpd", e.target.checked)}
+                            className="mt-0.5 w-4 h-4 accent-[#FFD400] rounded cursor-pointer flex-shrink-0"
+                          />
+                          <span className="text-[11px] text-slate-400 leading-tight">
+                            Concordo em fornecer meus dados para que a Ideal Solutions entre em contato comercial, em conformidade com a LGPD.
+                          </span>
+                        </label>
+                        {errors.lgpd && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.lgpd}</span>}
+                      </div>
+
+                      {/* Submit Button */}
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full h-12 bg-[#FFD400] hover:bg-[#FACC15] text-[#0F172A] font-extrabold text-[15px] rounded-lg transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2 mt-2"
+                      >
+                        {loading ? "Enviando informações..." : "Quero mais informações"}
+                      </button>
+                    </form>
+                  )}
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════════════════════
+            02. DEPOIMENTOS / PROVA SOCIAL (CARROSSEL RESPONSIVO)
+        ════════════════════════════════════════════════════════════ */}
+        <section id="depoimentos" className="py-16 sm:py-24 bg-white text-[#0F172A] border-b border-slate-200">
+          <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
+            <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+              <span className="text-[#0F172A] font-extrabold text-[12px] uppercase tracking-widest bg-slate-100 px-3.5 py-1 rounded-full border border-slate-200 inline-block">
+                Projetos & Presença Digital
+              </span>
+              <h2 className="text-[26px] sm:text-[36px] font-black leading-[1.2] text-[#0F172A]">
+                Estruturas desenvolvidas para clínicas odontológicas
+              </h2>
+              <p className="text-[15px] text-slate-600">
+                Formatos personalizados de posicionamento digital e captação em diferentes regiões.
+              </p>
+            </div>
+
+            {/* Testimonials Responsive Carousel */}
+            <div className="relative max-w-4xl mx-auto">
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-7 sm:p-10 shadow-sm min-h-[220px] flex flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="inline-block px-3 py-1 bg-slate-200/80 rounded text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                    {TESTIMONIALS[activeTestimonial].type}
+                  </div>
+                  <p className="text-[16px] sm:text-[18px] text-slate-700 leading-relaxed font-medium">
+                    "{TESTIMONIALS[activeTestimonial].text}"
+                  </p>
+                </div>
+
+                <div className="pt-6 border-t border-slate-200 mt-6 flex items-center justify-between">
+                  <div>
+                    <h4 className="font-extrabold text-[15px] text-[#0F172A]">{TESTIMONIALS[activeTestimonial].author}</h4>
+                    <p className="text-[12px] text-slate-500">{TESTIMONIALS[activeTestimonial].location}</p>
+                  </div>
+
+                  {/* Controls */}
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setActiveTestimonial(p => (p === 0 ? TESTIMONIALS.length - 1 : p - 1))}
+                      className="w-9 h-9 rounded-full bg-white border border-slate-300 flex items-center justify-center text-slate-700 hover:bg-slate-100 transition-colors"
+                      aria-label="Anterior"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+
+                    <div className="flex gap-1.5 px-2">
+                      {TESTIMONIALS.map((_, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setActiveTestimonial(idx)}
+                          className={`w-2 h-2 rounded-full transition-all ${
+                            activeTestimonial === idx ? "w-6 bg-[#0F172A]" : "bg-slate-300"
+                          }`}
+                          aria-label={`Ir para slide ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setActiveTestimonial(p => (p === TESTIMONIALS.length - 1 ? 0 : p + 1))}
+                      className="w-9 h-9 rounded-full bg-white border border-slate-300 flex items-center justify-center text-slate-700 hover:bg-slate-100 transition-colors"
+                      aria-label="Próximo"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-10 text-center">
+              <button
+                type="button"
+                onClick={() => scrollTo("#formulario")}
+                className="bg-[#0F172A] text-white hover:bg-slate-800 font-extrabold px-6 py-3 rounded-full text-[14px] transition-all inline-flex items-center gap-2"
+              >
+                Quero mais informações
+                <ArrowRight className="w-4 h-4 text-[#FFD400]" />
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════════════════════
+            03. QUEM SOMOS (HISTÓRIA REAL & POSICIONAMENTO)
+        ════════════════════════════════════════════════════════════ */}
+        <section id="sobre" className="py-16 sm:py-24 bg-[#F8FAFC] text-[#0F172A] border-b border-slate-200">
+          <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
+            <div className="grid lg:grid-cols-12 gap-12 items-center">
+              
+              <div className="lg:col-span-6 space-y-5">
+                <span className="text-[#0F172A] font-extrabold text-[12px] uppercase tracking-widest bg-[#FFD400] px-3.5 py-1 rounded-full inline-block">
+                  Quem Somos
+                </span>
+                <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18] tracking-tight text-[#0F172A]">
+                  Especialização em presença digital para odontologia.
+                </h2>
+                <p className="text-[15px] sm:text-[16px] text-slate-700 leading-relaxed">
+                  A Ideal Solutions atua no mercado de marketing e presença digital desde 2024, desenvolvendo estratégias estruturadas para empresas e profissionais de saúde.
+                </p>
+                <p className="text-[15px] sm:text-[16px] text-slate-700 leading-relaxed">
+                  Com o tempo, direcionamos parte importante de nossa atuação para o setor odontológico, combinando criação de landing pages de alta clareza, planejamento de conteúdo para Instagram e acompanhamento próximo de métricas.
+                </p>
+
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => scrollTo("#formulario")}
+                    className="bg-[#0F172A] text-white hover:bg-slate-800 font-extrabold px-6 py-3 rounded-full text-[14px] transition-all inline-flex items-center gap-2"
+                  >
+                    Quero mais informações
+                    <ArrowRight className="w-4 h-4 text-[#FFD400]" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Pillars Cards */}
               <div className="lg:col-span-6 space-y-4">
-                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm hover:border-[#FFD400] hover:shadow-md transition-all">
+                <div className="p-5 sm:p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:border-[#FFD400] transition-all">
                   <div className="flex gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#FFD400] flex items-center justify-center text-black font-black flex-shrink-0">
-                      <ShieldCheck className="w-6 h-6" />
+                    <div className="w-10 h-10 rounded-lg bg-slate-900 text-[#FFD400] flex items-center justify-center font-black flex-shrink-0">
+                      <ShieldCheck className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-[18px] text-black">Atendimento Nacional</h3>
-                      <p className="text-[14px] text-slate-600 mt-1">
-                        Acompanhamento remoto e contínuo para dentistas e clínicas em todos os estados do Brasil.
+                      <h3 className="font-extrabold text-[16px] text-[#0F172A]">Atendimento em todo o Brasil</h3>
+                      <p className="text-[13.5px] text-slate-600 mt-1 leading-relaxed">
+                        Estrutura remota completa para atender consultórios e clínicas em qualquer estado do país.
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm hover:border-[#FFD400] hover:shadow-md transition-all">
+                <div className="p-5 sm:p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:border-[#FFD400] transition-all">
                   <div className="flex gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#FFD400] flex items-center justify-center text-black font-black flex-shrink-0">
-                      <Award className="w-6 h-6" />
+                    <div className="w-10 h-10 rounded-lg bg-slate-900 text-[#FFD400] flex items-center justify-center font-black flex-shrink-0">
+                      <Award className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-[18px] text-black">Planos 100% Personalizados</h3>
-                      <p className="text-[14px] text-slate-600 mt-1">
-                        Sem pacotes Bronze, Silver ou Gold engessados. Criamos a solução exata que a sua clínica precisa hoje.
+                      <h3 className="font-extrabold text-[16px] text-[#0F172A]">Soluções Personalizadas</h3>
+                      <p className="text-[13.5px] text-slate-600 mt-1 leading-relaxed">
+                        Entendemos a realidade de cada clínica e desenhamos o escopo de trabalho mais adequado para o momento.
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm hover:border-[#FFD400] hover:shadow-md transition-all">
+                <div className="p-5 sm:p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:border-[#FFD400] transition-all">
                   <div className="flex gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#FFD400] flex items-center justify-center text-black font-black flex-shrink-0">
-                      <Smartphone className="w-6 h-6" />
+                    <div className="w-10 h-10 rounded-lg bg-slate-900 text-[#FFD400] flex items-center justify-center font-black flex-shrink-0">
+                      <Smartphone className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-[18px] text-black">Orientação Audiovisual para a Equipe</h3>
-                      <p className="text-[14px] text-slate-600 mt-1">
-                        Orientamos o que e como gravar no consultório, garantindo padrão profissional de roteiro e imagem.
+                      <h3 className="font-extrabold text-[16px] text-[#0F172A]">Orientação e Roteiros de Conteúdo</h3>
+                      <p className="text-[13.5px] text-slate-600 mt-1 leading-relaxed">
+                        A clínica fornece o material de fotos e vídeos, enquanto a Ideal fornece roteiros, ideias e direcionamento de gravação.
                       </p>
                     </div>
                   </div>
@@ -676,52 +832,46 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            04. MÉSTATIC IDEAL METHOD — OBSIDIAN DARK (#0E0E11)
+            04. MÉTODO IDEAL (5 ETAPAS PROMPT DIRECTIVE Item 11)
         ════════════════════════════════════════════════════════════ */}
-        <section id="metodo" className="py-20 sm:py-28 bg-[#0E0E11] text-white border-t border-b border-white/10">
-          <div className="max-w-[1040px] mx-auto px-5 sm:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-              <span className="text-[#FFD400] font-black text-[12px] uppercase tracking-widest bg-[#FFD400]/10 px-4 py-1.5 rounded-full border border-[#FFD400]/30 inline-block">
+        <section id="metodo" className="py-16 sm:py-24 bg-[#0F172A] text-white border-b border-slate-800">
+          <div className="max-w-[1140px] mx-auto px-5 sm:px-8">
+            <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
+              <span className="text-[#FFD400] font-extrabold text-[12px] uppercase tracking-widest bg-slate-800 px-3.5 py-1 rounded-full border border-slate-700 inline-block">
                 O Método IDEAL
               </span>
-              <h2 className="text-[30px] sm:text-[44px] font-black leading-[1.12]">
-                Estrutura em 5 etapas para o crescimento da sua clínica
+              <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18] text-white">
+                Como organizamos a evolução da sua presença digital
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
               {[
-                { letter: "I", title: "Imersão", desc: "Diagnóstico profundo da clínica, localização e público-alvo." },
-                { letter: "D", title: "Direção", desc: "Definição da estratégia de posicionamento e oferta de consultas." },
-                { letter: "E", title: "Execução", desc: "Criação de landing page, peças visuais e campanhas ativas." },
-                { letter: "A", title: "Acompanhamento", desc: "Gestão diária, orientação audiovisual e otimização dos leads." },
-                { letter: "L", title: "Lapidação", desc: "Escala contínua do faturamento e refinamento da presença digital." },
+                { letter: "I", title: "Imersão", desc: "Entendemos sua clínica, seus serviços, seu público e sua presença digital." },
+                { letter: "D", title: "Direção estratégica", desc: "Definimos prioridades, comunicação e soluções adequadas aos seus objetivos." },
+                { letter: "E", title: "Execução", desc: "Criamos os materiais e implementamos as entregas contratadas. Sua equipe recebe orientação para fornecer fotos e vídeos." },
+                { letter: "A", title: "Acompanhamento próximo", desc: "Organizamos aprovações e acompanhamos entregas e indicadores relacionados ao projeto." },
+                { letter: "L", title: "Lapidação contínua", desc: "Ajustamos a comunicação e as ações com base nos dados disponíveis e no retorno da sua equipe." },
               ].map((m, i) => (
-                <div
-                  key={i}
-                  onClick={() => setActiveStep(i)}
-                  className={`border p-6 rounded-2xl text-center space-y-3 transition-all cursor-pointer ${
-                    activeStep === i
-                      ? "bg-[#181820] border-[#FFD400] shadow-[0_0_20px_rgba(255,212,0,0.2)] scale-[1.02]"
-                      : "bg-[#141419] border-white/10 hover:border-white/30"
-                  }`}
-                >
-                  <div className={`w-12 h-12 rounded-xl font-black text-[22px] flex items-center justify-center mx-auto transition-colors ${
-                    activeStep === i ? "bg-[#FFD400] text-[#0E0E11]" : "bg-white/10 text-white/60"
-                  }`}>
+                <div key={i} className="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-2.5">
+                  <div className="w-10 h-10 rounded-lg bg-[#FFD400] text-[#0F172A] font-black text-[18px] flex items-center justify-center">
                     {m.letter}
                   </div>
-                  <h3 className="font-extrabold text-[16px] text-white">{m.title}</h3>
-                  <p className="text-[12px] text-white/60 leading-relaxed">{m.desc}</p>
+                  <h3 className="font-extrabold text-[15px] text-white">{m.letter} — {m.title}</h3>
+                  <p className="text-[12.5px] text-slate-300 leading-relaxed">{m.desc}</p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-14 text-center">
+            <p className="text-[12.5px] text-slate-400 text-center mt-8 italic">
+              Observação: O acompanhamento respeita o escopo e o período contratados. Projetos pontuais e serviços recorrentes têm formatos próprios.
+            </p>
+
+            <div className="mt-10 text-center">
               <button
                 type="button"
-                onClick={() => scrollTo("#hero")}
-                className="bg-[#FFD400] text-[#0E0E11] hover:brightness-105 font-extrabold px-8 py-4 rounded-full text-[15px] transition-all shadow-lg inline-flex items-center gap-2"
+                onClick={() => scrollTo("#formulario")}
+                className="bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-7 py-3 rounded-full text-[14px] transition-all shadow-md inline-flex items-center gap-2"
               >
                 Quero mais informações
                 <ArrowRight className="w-4 h-4" />
@@ -731,62 +881,68 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            05. ENTREGÁVEIS & SOLUÇÕES — PURE WHITE (#FFFFFF)
+            05. SOLUÇÕES / ENTREGÁVEIS (PROMPT DIRECTIVE Item 12)
         ════════════════════════════════════════════════════════════ */}
-        <section id="solucoes" className="py-20 sm:py-28 bg-white text-[#0E0E11]">
+        <section id="solucoes" className="py-16 sm:py-24 bg-white text-[#0F172A]">
           <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-              <span className="text-[#0E0E11] font-black text-[12px] uppercase tracking-widest bg-[#FFD400] px-4 py-1.5 rounded-full inline-block shadow-sm">
-                Soluções Integradas
+            <div className="text-center max-w-3xl mx-auto mb-14 space-y-2">
+              <span className="text-[#0F172A] font-extrabold text-[12px] uppercase tracking-widest bg-slate-100 px-3.5 py-1 rounded-full border border-slate-200 inline-block">
+                Nossas Soluções
               </span>
-              <h2 className="text-[30px] sm:text-[44px] font-black leading-[1.12] text-[#0E0E11]">
-                Sua clínica não precisa de um pacote genérico. Precisa da estrutura certa.
+              <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18] text-[#0F172A]">
+                As soluções que estruturam a presença digital da sua clínica.
               </h2>
+              <p className="text-[15px] text-slate-600">
+                A Ideal monta a estrutura conforme as necessidades específicas do seu negócio.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-              <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:border-[#FFD400] hover:shadow-lg transition-all">
-                <div className="w-12 h-12 rounded-2xl bg-[#0E0E11] text-[#FFD400] flex items-center justify-center mb-6">
-                  <Layers className="w-6 h-6" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+              {/* Pillar 1 */}
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-7 hover:border-[#FFD400] transition-all shadow-sm">
+                <div className="w-11 h-11 rounded-xl bg-slate-900 text-[#FFD400] flex items-center justify-center mb-5">
+                  <Layers className="w-5 h-5" />
                 </div>
-                <h3 className="text-[20px] font-black text-black mb-3">GESTÃO DIGITAL</h3>
-                <p className="text-[14px] text-slate-600 mb-6 leading-relaxed">
-                  Planejamento e estratégia contínua da sua marca no digital com acompanhamento de metas.
+                <h3 className="text-[18px] font-black text-[#0F172A] mb-2">GESTÃO E ESTRATÉGIA DIGITAL</h3>
+                <p className="text-[13.5px] text-slate-600 mb-5 leading-relaxed">
+                  Planejamento, acompanhamento e organização contínua da presença digital da sua clínica.
                 </p>
-                <ul className="space-y-2.5 text-[13px] text-slate-700 font-medium">
-                  <li className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#FFD400]" /> Planejamento de comunicação</li>
-                  <li className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#FFD400]" /> Calendário editorial mensal</li>
-                  <li className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#FFD400]" /> Relatórios de métricas e conversão</li>
+                <ul className="space-y-2 text-[13px] text-slate-700 font-medium border-t border-slate-200 pt-4">
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Planejamento de comunicação</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Calendário editorial estruturado</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Acompanhamento de indicadores</li>
                 </ul>
               </div>
 
-              <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:border-[#FFD400] hover:shadow-lg transition-all">
-                <div className="w-12 h-12 rounded-2xl bg-[#0E0E11] text-[#FFD400] flex items-center justify-center mb-6">
-                  <Smartphone className="w-6 h-6" />
+              {/* Pillar 2 */}
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-7 hover:border-[#FFD400] transition-all shadow-sm">
+                <div className="w-11 h-11 rounded-xl bg-slate-900 text-[#FFD400] flex items-center justify-center mb-5">
+                  <Smartphone className="w-5 h-5" />
                 </div>
-                <h3 className="text-[20px] font-black text-black mb-3">INSTAGRAM & CONTEÚDO</h3>
-                <p className="text-[14px] text-slate-600 mb-6 leading-relaxed">
-                  Posicionamento de alta autoridade para transformar seguidores em agendamentos particulares.
+                <h3 className="text-[18px] font-black text-[#0F172A] mb-2">CONTEÚDO PARA INSTAGRAM</h3>
+                <p className="text-[13.5px] text-slate-600 mb-5 leading-relaxed">
+                  Comunicação, planejamento e produção dos materiais visuais previstos no escopo contratado.
                 </p>
-                <ul className="space-y-2.5 text-[13px] text-slate-700 font-medium">
-                  <li className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#FFD400]" /> Design de carrosséis e posts</li>
-                  <li className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#FFD400]" /> Roteiros para Reels e Stories</li>
-                  <li className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#FFD400]" /> Direção de gravação para a equipe</li>
+                <ul className="space-y-2 text-[13px] text-slate-700 font-medium border-t border-slate-200 pt-4">
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Design de posts e carrosséis</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Roteiros e orientação para Reels</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Padrão visual alinhado à marca</li>
                 </ul>
               </div>
 
-              <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:border-[#FFD400] hover:shadow-lg transition-all">
-                <div className="w-12 h-12 rounded-2xl bg-[#0E0E11] text-[#FFD400] flex items-center justify-center mb-6">
-                  <Globe className="w-6 h-6" />
+              {/* Pillar 3 */}
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-7 hover:border-[#FFD400] transition-all shadow-sm">
+                <div className="w-11 h-11 rounded-xl bg-slate-900 text-[#FFD400] flex items-center justify-center mb-5">
+                  <Globe className="w-5 h-5" />
                 </div>
-                <h3 className="text-[20px] font-black text-black mb-3">LANDING PAGES</h3>
-                <p className="text-[14px] text-slate-600 mb-6 leading-relaxed">
-                  Páginas de altíssima conversão projetadas para tráfego pago e prospecção direta.
+                <h3 className="text-[18px] font-black text-[#0F172A] mb-2">LANDING PAGES & INTEGRAÇÕES</h3>
+                <p className="text-[13.5px] text-slate-600 mb-5 leading-relaxed">
+                  Páginas pensadas para apresentar serviços, diferenciais e facilitar conversões e contatos.
                 </p>
-                <ul className="space-y-2.5 text-[13px] text-slate-700 font-medium">
-                  <li className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#FFD400]" /> Redação e Copywriting focado em vendas</li>
-                  <li className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#FFD400]" /> Design responsivo de alta velocidade</li>
-                  <li className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#FFD400]" /> Integração rápida com CRM e WhatsApp</li>
+                <ul className="space-y-2 text-[13px] text-slate-700 font-medium border-t border-slate-200 pt-4">
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Estrutura e redação focadas em clareza</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Design responsivo de carregamento rápido</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Conexão com WhatsApp e formulários</li>
                 </ul>
               </div>
             </div>
@@ -794,43 +950,43 @@ export default function DentistLanding() {
             <div className="text-center">
               <button
                 type="button"
-                onClick={() => scrollTo("#hero")}
-                className="bg-[#0E0E11] text-[#FFD400] hover:bg-[#1F1F24] font-black px-8 py-4 rounded-full text-[15px] transition-all shadow-md inline-flex items-center gap-2"
+                onClick={() => scrollTo("#formulario")}
+                className="bg-[#0F172A] text-white hover:bg-slate-800 font-extrabold px-7 py-3 rounded-full text-[14px] transition-all inline-flex items-center gap-2"
               >
                 Quero mais informações
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 text-[#FFD400]" />
               </button>
             </div>
           </div>
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            06. FAQ & FINAL CALL — OBSIDIAN DARK (#0E0E11)
+            06. FAQ & SEÇÃO FINAL (PROMPT DIRECTIVE Item 13 e 14)
         ════════════════════════════════════════════════════════════ */}
-        <section id="faq" className="py-20 sm:py-28 bg-[#0E0E11] text-white border-t border-white/10">
-          <div className="max-w-[900px] mx-auto px-5 sm:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-              <span className="text-[#FFD400] font-black text-[12px] uppercase tracking-widest bg-[#FFD400]/10 px-4 py-1.5 rounded-full border border-[#FFD400]/30 inline-block">
-                Perguntas Frequentes
+        <section id="faq" className="py-16 sm:py-24 bg-[#0F172A] text-white border-t border-slate-800">
+          <div className="max-w-[860px] mx-auto px-5 sm:px-8">
+            <div className="text-center max-w-xl mx-auto mb-14 space-y-2">
+              <span className="text-[#FFD400] font-extrabold text-[12px] uppercase tracking-widest bg-slate-800 px-3.5 py-1 rounded-full border border-slate-700 inline-block">
+                Dúvidas Frequentes
               </span>
-              <h2 className="text-[30px] sm:text-[44px] font-black leading-[1.12]">
-                Tire todas as suas dúvidas
+              <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18]">
+                Perguntas comuns antes de começar
               </h2>
             </div>
 
             <div className="space-y-3 mb-16">
               {FAQ_ITEMS.map((item, i) => (
-                <div key={i} className="bg-[#16161D] border border-white/10 rounded-xl overflow-hidden transition-all">
+                <div key={i} className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden transition-all">
                   <button
                     type="button"
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="w-full flex items-center justify-between gap-4 p-5 text-left font-bold text-[15px] text-white hover:text-[#FFD400] transition-colors"
+                    className="w-full flex items-center justify-between gap-4 p-4.5 sm:p-5 text-left font-bold text-[14.5px] text-white hover:text-[#FFD400] transition-colors"
                   >
                     <span>{item.q}</span>
-                    {openFaq === i ? <Minus className="w-5 h-5 text-[#FFD400] flex-shrink-0" /> : <Plus className="w-5 h-5 text-white/50 flex-shrink-0" />}
+                    {openFaq === i ? <Minus className="w-4 h-4 text-[#FFD400] flex-shrink-0" /> : <Plus className="w-4 h-4 text-slate-400 flex-shrink-0" />}
                   </button>
                   {openFaq === i && (
-                    <div className="px-5 pb-5 text-[14px] text-white/70 leading-relaxed border-t border-white/5 pt-3">
+                    <div className="px-5 pb-5 text-[13.5px] text-slate-300 leading-relaxed border-t border-slate-800/80 pt-3">
                       {item.a}
                     </div>
                   )}
@@ -838,23 +994,22 @@ export default function DentistLanding() {
               ))}
             </div>
 
-            {/* Final Banner Box */}
-            <div className="bg-gradient-to-br from-[#1C1C24] via-[#16161D] to-[#0E0E11] border border-[#FFD400]/30 rounded-3xl p-8 sm:p-14 text-center space-y-6 relative overflow-hidden shadow-2xl">
-              <div className="absolute -top-16 -right-16 w-48 h-48 bg-[#FFD400]/10 rounded-full blur-3xl pointer-events-none" />
-              <h3 className="text-[26px] sm:text-[38px] font-black leading-[1.15] text-white max-w-xl mx-auto tracking-tight">
-                Pronto para transformar o marketing da sua clínica?
+            {/* Final Call Banner (Prompt Directive Item 14) */}
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 sm:p-12 text-center space-y-5 shadow-xl">
+              <h3 className="text-[24px] sm:text-[32px] font-black leading-[1.2] text-white max-w-lg mx-auto">
+                Vamos entender o que sua clínica precisa?
               </h3>
-              <p className="text-white/60 text-[15px] max-w-lg mx-auto">
-                Preencha o diagnóstico inicial e receba um atendimento consultivo em até 1 dia útil.
+              <p className="text-slate-300 text-[14.5px] max-w-md mx-auto leading-relaxed">
+                Preencha o formulário. Nossa equipe entrará em contato em <strong className="text-white">até 1 dia útil</strong> para conversar sobre as soluções adequadas à sua clínica.
               </p>
               <div>
                 <button
                   type="button"
-                  onClick={() => scrollTo("#hero")}
-                  className="bg-[#FFD400] text-[#0E0E11] hover:brightness-105 font-black px-9 py-4 rounded-full text-[16px] transition-all shadow-[0_10px_30px_rgba(255,212,0,0.3)] inline-flex items-center gap-2"
+                  onClick={() => scrollTo("#formulario")}
+                  className="bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-8 py-3.5 rounded-full text-[15px] transition-all shadow-md inline-flex items-center gap-2"
                 >
                   Quero mais informações
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -864,29 +1019,98 @@ export default function DentistLanding() {
       </main>
 
       {/* ════════════════════════════════════════════════════════════
-          FOOTER — DEEP CHARCOAL (#08080A)
+          FOOTER (PROMPT DIRECTIVE Item 15)
       ════════════════════════════════════════════════════════════ */}
-      <footer className="py-10 bg-[#08080A] border-t border-white/10 text-white/40 text-[13px]">
+      <footer className="py-10 bg-[#0A0F1D] border-t border-slate-800 text-slate-400 text-[13px]">
         <div className="max-w-[1240px] mx-auto px-5 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <img src="/ideal-logo.png" alt="Ideal Solutions" className="h-8 w-auto object-contain opacity-90" onError={e => e.currentTarget.style.display = 'none'} />
-            <span className="font-extrabold text-white text-[15px]">Ideal Solutions</span>
+            <img src="/ideal-logo.png" alt="Ideal Solutions" className="h-7 w-auto object-contain brightness-0 invert opacity-90" onError={e => e.currentTarget.style.display = 'none'} />
+            <span className="font-extrabold text-white text-[14px]">Ideal Solutions</span>
           </div>
-          <p>© {new Date().getFullYear()} Ideal Solutions. Todos os direitos reservados. Presença Digital para Odontologia.</p>
+
+          <div className="flex items-center gap-6 text-[12.5px]">
+            <button
+              type="button"
+              onClick={() => setPrivacyOpen(true)}
+              className="hover:text-white transition-colors underline underline-offset-4"
+            >
+              Política de Privacidade
+            </button>
+            <span>•</span>
+            <span>Contato: atendimento@idealsolutions.com.br</span>
+          </div>
+
+          <p>© {new Date().getFullYear()} Ideal Solutions. Todos os direitos reservados.</p>
         </div>
       </footer>
 
-      {/* Mobile Sticky CTA */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 p-3 bg-[#0E0E11]/95 backdrop-blur-md border-t border-white/10 z-40">
-        <button
-          type="button"
-          onClick={() => scrollTo("#hero")}
-          className="w-full bg-[#FFD400] text-[#0E0E11] font-black py-3.5 rounded-xl text-[15px] flex items-center justify-center gap-2 shadow-lg"
-        >
-          Quero mais informações
-          <ArrowRight className="w-4 h-4" />
-        </button>
-      </div>
+      {/* ════════════════════════════════════════════════════════════
+          MOBILE STICKY CTA (PROMPT DIRECTIVE Item 8)
+          Hidden when #formulario is in viewport!
+      ════════════════════════════════════════════════════════════ */}
+      {!formVisible && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 p-3 bg-[#0F172A]/95 backdrop-blur-md border-t border-slate-800 z-40 transition-all duration-200">
+          <button
+            type="button"
+            onClick={() => scrollTo("#formulario")}
+            className="w-full bg-[#FFD400] text-[#0F172A] font-extrabold py-3.5 rounded-xl text-[14.5px] flex items-center justify-center gap-2 shadow-lg"
+          >
+            Quero mais informações
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      {/* ════════════════════════════════════════════════════════════
+          PRIVACY POLICY MODAL
+      ════════════════════════════════════════════════════════════ */}
+      {privacyOpen && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 text-white rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div className="flex items-center gap-2">
+                <Lock className="w-5 h-5 text-[#FFD400]" />
+                <h3 className="text-[18px] font-extrabold">Política de Privacidade — Ideal Solutions</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPrivacyOpen(false)}
+                className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-[13px] text-slate-300 leading-relaxed">
+              <p>
+                A <strong>Ideal Solutions</strong> valoriza a privacidade e a segurança das informações fornecidas por nossos usuários.
+              </p>
+              <h4 className="font-bold text-white text-[14px]">1. Coleta de Dados</h4>
+              <p>
+                Os dados coletados em nosso formulário (como nome, WhatsApp, clínica, cidade, estado, CNPJ e faturamento) são fornecidos voluntariamente pelo usuário para fins de contato comercial e elaboração de proposta personalizada.
+              </p>
+              <h4 className="font-bold text-white text-[14px]">2. Uso das Informações</h4>
+              <p>
+                As informações coletadas são utilizadas exclusivamente pela equipe da Ideal Solutions para realizar o atendimento comercial, entender o escopo do projeto e apresentar as soluções contratáveis. Não vendemos nem compartilhamos dados com terceiros.
+              </p>
+              <h4 className="font-bold text-white text-[14px]">3. Direitos do Titular (LGPD)</h4>
+              <p>
+                Em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018), você pode solicitar a alteração, exclusão ou confirmação do tratamento dos seus dados a qualquer momento pelo e-mail <em>atendimento@idealsolutions.com.br</em>.
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-slate-800 text-right">
+              <button
+                type="button"
+                onClick={() => setPrivacyOpen(false)}
+                className="bg-[#FFD400] text-[#0F172A] font-extrabold px-5 py-2 rounded-lg text-[13px]"
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
