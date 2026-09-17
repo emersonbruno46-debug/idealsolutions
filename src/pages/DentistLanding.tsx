@@ -114,7 +114,7 @@ export default function DentistLanding() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [utms, setUtms] = useState<Record<string, string>>({});
 
-  // EXACT FORM STATE (User instruction: Nome, Email, Telefone, Empresa, Segmento, Faturamento + caixas opcionais de CNPJ e Investimento ao selecionar faturamento)
+  // EXACT FORM STATE
   const [form, setForm] = useState({
     nome: "",
     email: "",
@@ -268,7 +268,7 @@ export default function DentistLanding() {
               onClick={() => scrollTo("#formulario")}
               className="bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-6 py-2.5 rounded-full text-[14px] transition-all shadow-sm active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD400]"
             >
-              Quero mais informações
+              Quero atrair mais pacientes
             </button>
           </div>
 
@@ -303,7 +303,7 @@ export default function DentistLanding() {
                 onClick={() => { scrollTo("#formulario"); setMenuOpen(false); }}
                 className="w-full bg-[#FFD400] text-[#0F172A] py-3.5 rounded-xl font-extrabold text-[15px]"
               >
-                Quero mais informações
+                Quero atrair mais pacientes
               </button>
             </div>
           </nav>
@@ -312,29 +312,23 @@ export default function DentistLanding() {
 
       <main>
         {/* ════════════════════════════════════════════════════════════
-            01. HERO SECTION & FORMULÁRIO (EXACTLY AS REQUESTED)
+            01. HERO SECTION & FORMULÁRIO (NO EYEBROW)
         ════════════════════════════════════════════════════════════ */}
         <section id="hero" className="bg-[#0F172A] text-white pt-28 pb-16 sm:pt-36 sm:pb-20 border-b border-slate-800">
           <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
             <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start">
               
-              {/* Left Column: Headline, Subtitle & Value Props */}
+              {/* Left Column: Headline, Subheadline & Value Props */}
               <div className="lg:col-span-6 space-y-6 lg:pt-2">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-[#FFD400] text-[12px] font-bold uppercase tracking-wider">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" />
-                  <span>Presença Digital Odontológica</span>
-                </div>
-
-                <h1 className="text-[30px] sm:text-[42px] lg:text-[48px] font-black leading-[1.12] tracking-tight text-white">
-                  Marketing para atrair mais{" "}
+                <h1 className="text-[30px] sm:text-[42px] lg:text-[46px] font-black leading-[1.12] tracking-tight text-white">
+                  Fazemos sua clínica atrair mais pacientes{" "}
                   <span className="text-[#FFD400] font-black underline decoration-[#FFD400]/40 underline-offset-4">
-                    pacientes particulares
-                  </span>{" "}
-                  para sua clínica.
+                    sem depender só de indicação.
+                  </span>
                 </h1>
 
                 <p className="text-[16px] sm:text-[18px] text-slate-300 font-medium leading-relaxed">
-                  Unimos estratégia, conteúdo para Instagram e landing pages para destacar os diferenciais da sua clínica e facilitar novos contatos.
+                  Estratégia, conteúdo e landing pages para transformar sua presença digital em mais autoridade, mais oportunidades e novos agendamentos.
                 </p>
 
                 {/* 3 Short Arguments */}
@@ -368,13 +362,13 @@ export default function DentistLanding() {
                     onClick={() => scrollTo("#formulario")}
                     className="inline-flex items-center gap-2.5 bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-7 py-3.5 rounded-xl text-[15px] transition-all shadow-md active:scale-95"
                   >
-                    Quero mais informações
+                    Quero atrair mais pacientes
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
-              {/* Right Column: FORM CARD (EXACTLY THE 6 SPECIFIED FIELDS + 2 OPTIONAL UPON REVENUE SELECTION) */}
+              {/* Right Column: FORM CARD */}
               <div className="lg:col-span-6" id="formulario" style={{ scrollMarginTop: "100px" }}>
                 <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-7 text-white shadow-2xl">
                   
@@ -517,9 +511,7 @@ export default function DentistLanding() {
                         {errors.faturamento && <span className="text-[11px] text-red-400 mt-0.5 block">{errors.faturamento}</span>}
                       </div>
 
-                      {/* ════════════════════════════════════════════════════════════
-                          CAIXAS OPCIONAIS DE INVESTIMENTO E CNPJ (SOMENTE PARA FATURAMENTO ABAIXO DE 60K)
-                      ════════════════════════════════════════════════════════════ */}
+                      {/* CAIXAS OPCIONAIS DE INVESTIMENTO E CNPJ (SOMENTE PARA FATURAMENTO ABAIXO DE 60K) */}
                       {form.faturamento && form.faturamento !== "60k-100k" && form.faturamento !== "acima-100k" && (
                         <div className="space-y-3.5 pt-3 border-t border-slate-800 bg-slate-950/70 p-3.5 rounded-lg animate-fadeIn">
                           <p className="text-[11px] font-bold text-[#FFD400] uppercase tracking-wider">
@@ -581,7 +573,7 @@ export default function DentistLanding() {
                         disabled={loading}
                         className="w-full h-12 bg-[#FFD400] hover:bg-[#FACC15] text-[#0F172A] font-extrabold text-[15px] rounded-lg transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2 mt-2"
                       >
-                        {loading ? "Enviando informações..." : "Quero mais informações"}
+                        {loading ? "Enviando informações..." : "Quero atrair mais pacientes"}
                       </button>
                     </form>
                   )}
@@ -672,7 +664,7 @@ export default function DentistLanding() {
                 onClick={() => scrollTo("#formulario")}
                 className="bg-[#0F172A] text-white hover:bg-slate-800 font-extrabold px-6 py-3 rounded-full text-[14px] transition-all inline-flex items-center gap-2"
               >
-                Quero mais informações
+                Quero atrair mais pacientes
                 <ArrowRight className="w-4 h-4 text-[#FFD400]" />
               </button>
             </div>
@@ -706,7 +698,7 @@ export default function DentistLanding() {
                     onClick={() => scrollTo("#formulario")}
                     className="bg-[#0F172A] text-white hover:bg-slate-800 font-extrabold px-6 py-3 rounded-full text-[14px] transition-all inline-flex items-center gap-2"
                   >
-                    Quero mais informações
+                    Quero atrair mais pacientes
                     <ArrowRight className="w-4 h-4 text-[#FFD400]" />
                   </button>
                 </div>
@@ -803,7 +795,7 @@ export default function DentistLanding() {
                 onClick={() => scrollTo("#formulario")}
                 className="bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-7 py-3 rounded-full text-[14px] transition-all shadow-md inline-flex items-center gap-2"
               >
-                Quero mais informações
+                Quero atrair mais pacientes
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -883,7 +875,7 @@ export default function DentistLanding() {
                 onClick={() => scrollTo("#formulario")}
                 className="bg-[#0F172A] text-white hover:bg-slate-800 font-extrabold px-7 py-3 rounded-full text-[14px] transition-all inline-flex items-center gap-2"
               >
-                Quero mais informações
+                Quero atrair mais pacientes
                 <ArrowRight className="w-4 h-4 text-[#FFD400]" />
               </button>
             </div>
@@ -938,7 +930,7 @@ export default function DentistLanding() {
                   onClick={() => scrollTo("#formulario")}
                   className="bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-8 py-3.5 rounded-full text-[15px] transition-all shadow-md inline-flex items-center gap-2"
                 >
-                  Quero mais informações
+                  Quero atrair mais pacientes
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
@@ -985,7 +977,7 @@ export default function DentistLanding() {
             onClick={() => scrollTo("#formulario")}
             className="w-full bg-[#FFD400] text-[#0F172A] font-extrabold py-3.5 rounded-xl text-[14.5px] flex items-center justify-center gap-2 shadow-lg"
           >
-            Quero mais informações
+            Quero atrair mais pacientes
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
