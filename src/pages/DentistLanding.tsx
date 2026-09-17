@@ -518,9 +518,9 @@ export default function DentistLanding() {
                       </div>
 
                       {/* ════════════════════════════════════════════════════════════
-                          CAIXAS OPCIONAIS DE INVESTIMENTO E CNPJ (ABRE AO SELECONAR FATURAMENTO)
+                          CAIXAS OPCIONAIS DE INVESTIMENTO E CNPJ (SOMENTE PARA FATURAMENTO ABAIXO DE 60K)
                       ════════════════════════════════════════════════════════════ */}
-                      {form.faturamento && (
+                      {form.faturamento && form.faturamento !== "60k-100k" && form.faturamento !== "acima-100k" && (
                         <div className="space-y-3.5 pt-3 border-t border-slate-800 bg-slate-950/70 p-3.5 rounded-lg animate-fadeIn">
                           <p className="text-[11px] font-bold text-[#FFD400] uppercase tracking-wider">
                             Informações Opcionais
