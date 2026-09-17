@@ -1,139 +1,64 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    /* Brand tokens */
-    --brand-yellow: #FFD400;
-    --brand-yellow-light: rgba(255, 212, 0, 0.14);
-    --brand-yellow-glow: rgba(255, 212, 0, 0.3);
-    --brand-bg: #F7F7F3;
-    --brand-surface: #FFFFFF;
-    --brand-black: #111111;
-    --brand-secondary: #646464;
-    --brand-border: #E9E9E5;
-
-    /* Shadcn compatibility tokens mapped to brand */
-    --background: 48 14% 96%;
-    --foreground: 0 0% 7%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 7%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 7%;
-    --primary: 0 0% 7%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 48 10% 94%;
-    --secondary-foreground: 0 0% 7%;
-    --muted: 48 10% 94%;
-    --muted-foreground: 0 0% 39%;
-    --accent: 49 100% 50%;
-    --accent-foreground: 0 0% 7%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 48 6% 91%;
-    --input: 48 6% 91%;
-    --ring: 49 100% 50%;
-    --radius: 0.75rem;
-  }
+:root {
+  --brand-yellow: #FFD400;
+  --brand-black: #0A0A0A;
 }
 
-@layer base {
-  *, *::before, *::after {
-    box-sizing: border-box;
-    border-color: var(--brand-border);
-  }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
-    background-color: #F7F7F3;
-  }
-
-  body {
-    background-color: #F7F7F3;
-    color: #111111;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  /* Single sans-serif family hierarchy */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    color: #111111;
-    letter-spacing: -0.03em;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  }
-
-  input, textarea, select, button, label {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-  }
-
-  ::selection {
-    background-color: rgba(255, 212, 0, 0.45);
-    color: #111111;
-  }
+html {
+  scroll-behavior: smooth;
+  background: #0A0A0A;
 }
 
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0A0A0A;
+  color: #ffffff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color-scheme: dark;
+  /* espaço para mobile CTA sticky */
+  padding-bottom: 72px;
+}
+
+@media (min-width: 768px) {
+  body { padding-bottom: 0; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #0A0A0A; }
+::-webkit-scrollbar-thumb { background: #FFD400; border-radius: 10px; }
+
+/* ─── Selection ─── */
+::selection { background: rgba(255, 212, 0, 0.3); color: #fff; }
+
+/* ─── Hide scrollbar utility ─── */
 @layer utilities {
-  /* Brand classes */
-  .bg-brand-bg { background-color: #F7F7F3; }
-  .bg-brand-surface { background-color: #FFFFFF; }
-  .bg-brand-black { background-color: #111111; }
-  .bg-brand-yellow { background-color: #FFD400; }
-  .text-brand-black { color: #111111; }
-  .text-brand-secondary { color: #646464; }
-  .text-brand-yellow { color: #FFD400; }
-  .border-brand { border-color: #E9E9E5; }
-
-  /* Glass/Blur utility */
-  .header-blur {
-    background: rgba(247, 247, 243, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-  }
-
-  /* Subtle card shadow */
-  .editorial-shadow {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 16px 36px -12px rgba(0, 0, 0, 0.05);
-  }
-
-  .editorial-shadow-hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05), 0 24px 48px -12px rgba(0, 0, 0, 0.08);
-  }
-
-  /* Scroll lock utility */
   .hide-scrollbar::-webkit-scrollbar { display: none; }
   .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
 
-/* Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ─── Fade-up animation ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim-fade-up { animation: fadeUp 0.5s ease-out both; }
+
+/* ─── Input reset for dark theme ─── */
+input[type="checkbox"] {
+  accent-color: #FFD400;
 }
 
-.anim-fade-up {
-  animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+select option {
+  background: #1a1a1a;
+  color: #ffffff;
 }
