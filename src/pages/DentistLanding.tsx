@@ -320,40 +320,38 @@ export default function DentistLanding() {
           <ShaderBackground className="absolute inset-0 opacity-40 pointer-events-none" />
 
           <div className="max-w-[1240px] mx-auto px-5 sm:px-8 relative z-10">
-            <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+            <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start relative z-10">
               
               {/* Left Column: Headline, Subheadline & Value Props */}
-              <div className="lg:col-span-6 flex flex-col justify-between space-y-6 lg:py-2">
-                <div className="space-y-5">
-                  <h1 className="text-[30px] sm:text-[42px] lg:text-[46px] font-black leading-[1.12] tracking-tight text-white">
-                    Fazemos sua clínica atrair mais pacientes{" "}
-                    <span className="text-[#FFD400] font-black underline decoration-[#FFD400]/40 underline-offset-4">
-                      sem depender só de indicação.
-                    </span>
-                  </h1>
+              <div className="lg:col-span-6 space-y-6">
+                <h1 className="text-[34px] sm:text-[48px] lg:text-[60px] font-black leading-[1.08] tracking-tight text-white">
+                  Fazemos sua clínica atrair mais pacientes{" "}
+                  <span className="text-[#FFD400] font-black underline decoration-[#FFD400]/40 underline-offset-4">
+                    sem depender só de indicação.
+                  </span>
+                </h1>
 
-                  <p className="text-[16px] sm:text-[18px] text-slate-200 font-medium leading-relaxed">
-                    Estratégia, conteúdo e landing pages para transformar sua presença digital em mais autoridade, mais oportunidades e novos agendamentos.
-                  </p>
-                </div>
+                <p className="text-[16px] sm:text-[18px] lg:text-[19px] text-slate-300 font-medium leading-relaxed">
+                  Estratégia, conteúdo e landing pages para transformar sua presença digital em mais autoridade, mais oportunidades e novos agendamentos.
+                </p>
 
                 {/* 3 Short Arguments */}
-                <div className="space-y-3.5 py-2">
-                  <div className="flex items-center gap-3.5 text-[14px] sm:text-[15px] font-semibold text-slate-200">
+                <div className="space-y-3.5 pt-1">
+                  <div className="flex items-center gap-3.5 text-[14.5px] sm:text-[15.5px] font-semibold text-slate-200">
                     <div className="w-6.5 h-6.5 rounded-full bg-[#FFD400]/20 border border-[#FFD400]/40 text-[#FFD400] flex items-center justify-center flex-shrink-0">
                       <Check className="w-4 h-4 stroke-[3]" />
                     </div>
                     <span>Foco em clínicas e consultórios odontológicos.</span>
                   </div>
 
-                  <div className="flex items-center gap-3.5 text-[14px] sm:text-[15px] font-semibold text-slate-200">
+                  <div className="flex items-center gap-3.5 text-[14.5px] sm:text-[15.5px] font-semibold text-slate-200">
                     <div className="w-6.5 h-6.5 rounded-full bg-[#FFD400]/20 border border-[#FFD400]/40 text-[#FFD400] flex items-center justify-center flex-shrink-0">
                       <Check className="w-4 h-4 stroke-[3]" />
                     </div>
                     <span>Estratégia, conteúdo e páginas de captação.</span>
                   </div>
 
-                  <div className="flex items-center gap-3.5 text-[14px] sm:text-[15px] font-semibold text-slate-200">
+                  <div className="flex items-center gap-3.5 text-[14.5px] sm:text-[15.5px] font-semibold text-slate-200">
                     <div className="w-6.5 h-6.5 rounded-full bg-[#FFD400]/20 border border-[#FFD400]/40 text-[#FFD400] flex items-center justify-center flex-shrink-0">
                       <Check className="w-4 h-4 stroke-[3]" />
                     </div>
@@ -366,7 +364,7 @@ export default function DentistLanding() {
                   <button
                     type="button"
                     onClick={() => scrollTo("#formulario")}
-                    className="inline-flex items-center gap-2.5 bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-8 py-4 rounded-xl text-[15px] transition-all shadow-lg active:scale-95 hover:shadow-[#FFD400]/20"
+                    className="inline-flex items-center gap-2.5 bg-[#FFD400] text-[#0F172A] hover:bg-[#FACC15] font-extrabold px-8 py-3.5 rounded-xl text-[15px] transition-all shadow-lg active:scale-95 hover:shadow-[#FFD400]/20"
                   >
                     Quero atrair mais pacientes
                     <ArrowRight className="w-4 h-4" />
@@ -374,13 +372,13 @@ export default function DentistLanding() {
                 </div>
               </div>
 
-              {/* Right Column: FORM CARD (GLASSMORPHISM & EQUAL HEIGHT MATCHING LEFT COLUMN) */}
-              <div className="lg:col-span-6 flex flex-col h-full" id="formulario" style={{ scrollMarginTop: "100px" }}>
-                <div className="bg-slate-900/60 backdrop-blur-xl border border-white/15 rounded-2xl p-6 sm:p-7 text-white shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col justify-between h-full relative overflow-hidden">
+              {/* Right Column: FORM CARD (GLASSMORPHISM WITH NATURAL COMPACT SPACING) */}
+              <div className="lg:col-span-6" id="formulario" style={{ scrollMarginTop: "100px" }}>
+                <div className="bg-slate-900/60 backdrop-blur-xl border border-white/15 rounded-2xl p-6 sm:p-7 text-white shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
                   <div className="absolute -top-12 -right-12 w-32 h-32 bg-[#FFD400]/10 rounded-full blur-2xl pointer-events-none" />
 
                   {success ? (
-                    <div className="py-12 text-center space-y-4 my-auto">
+                    <div className="py-10 text-center space-y-4">
                       <div className="w-14 h-14 rounded-full bg-[#FFD400]/15 border border-[#FFD400]/40 flex items-center justify-center mx-auto text-[#FFD400]">
                         <CheckCircle2 className="w-8 h-8" />
                       </div>
@@ -400,7 +398,7 @@ export default function DentistLanding() {
                       </button>
                     </div>
                   ) : (
-                    <form onSubmit={handleSubmit} className="space-y-4 flex flex-col justify-between h-full" noValidate>
+                    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                       <div className="border-b border-white/10 pb-3 mb-1">
                         <h3 className="text-[18px] font-extrabold text-white tracking-tight">
                           Conte um pouco sobre sua clínica.
