@@ -746,49 +746,13 @@ export default function DentistLanding() {
                 </div>
               </div>
 
-              {/* Pillars Cards */}
-              <div className="lg:col-span-6 space-y-4">
-                <div className="p-5 sm:p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:border-[#FFD400] transition-all">
-                  <div className="flex gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-slate-900 text-[#FFD400] flex items-center justify-center font-black flex-shrink-0">
-                      <ShieldCheck className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-extrabold text-[16px] text-[#0F172A]">Atendimento em todo o Brasil</h3>
-                      <p className="text-[13.5px] text-slate-600 mt-1 leading-relaxed">
-                        Estrutura remota completa para atender consultórios e clínicas em qualquer estado do país.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-5 sm:p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:border-[#FFD400] transition-all">
-                  <div className="flex gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-slate-900 text-[#FFD400] flex items-center justify-center font-black flex-shrink-0">
-                      <Award className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-extrabold text-[16px] text-[#0F172A]">Soluções Personalizadas</h3>
-                      <p className="text-[13.5px] text-slate-600 mt-1 leading-relaxed">
-                        Entendemos a realidade de cada clínica e desenhamos o escopo de trabalho mais adequado para o momento.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-5 sm:p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:border-[#FFD400] transition-all">
-                  <div className="flex gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-slate-900 text-[#FFD400] flex items-center justify-center font-black flex-shrink-0">
-                      <Smartphone className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-extrabold text-[16px] text-[#0F172A]">Orientação e Roteiros de Conteúdo</h3>
-                      <p className="text-[13.5px] text-slate-600 mt-1 leading-relaxed">
-                        A clínica fornece o material de fotos e vídeos, enquanto a Ideal fornece roteiros, ideias e direcionamento de gravação.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+              {/* Image Quem Somos */}
+              <div className="lg:col-span-6 flex items-center justify-center">
+                <img
+                  src="/quem-somos.png"
+                  alt="Quem Somos - Ideal Solutions"
+                  className="w-full max-w-[540px] h-auto object-contain rounded-2xl shadow-xl border border-slate-200/80"
+                />
               </div>
 
             </div>
