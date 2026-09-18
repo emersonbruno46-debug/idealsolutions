@@ -628,11 +628,6 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            SOLUÇÕES (CARROSSEL DE CARDS SKIPER 3D)
-        ════════════════════════════════════════════════════════════ */}
-        <SolutionsSection onCtaClick={() => scrollTo("#formulario")} />
-
-        {/* ════════════════════════════════════════════════════════════
             02. DEPOIMENTOS / PROVA SOCIAL
         ════════════════════════════════════════════════════════════ */}
         <section id="depoimentos" className="py-16 sm:py-24 bg-white text-[#0F172A] border-b border-slate-200">
@@ -948,37 +943,9 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            05. SOLUÇÕES / ENTREGÁVEIS WITH FEATURE CAROUSEL
+            05. SOLUÇÕES / ENTREGÁVEIS WITH CAROUSEL 3D
         ════════════════════════════════════════════════════════════ */}
-        <section id="solucoes" className="py-16 sm:py-24 bg-white text-[#0F172A] border-b border-slate-200 relative overflow-hidden">
-          <div className="max-w-[1240px] mx-auto px-5 sm:px-8 relative z-10">
-            <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
-              <span className="text-[#0F172A] font-extrabold text-[12px] uppercase tracking-widest bg-slate-100 px-3.5 py-1 rounded-full border border-slate-200 inline-block shadow-sm">
-                Nossas Soluções
-              </span>
-              <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18] text-[#0F172A] tracking-tight">
-                As soluções que estruturam a presença digital da sua clínica.
-              </h2>
-              <p className="text-[15px] sm:text-[16.5px] text-slate-600 font-medium">
-                A Ideal monta a estrutura conforme as necessidades específicas do seu negócio. Clique nos itens para navegar.
-              </p>
-            </div>
-
-            {/* FEATURE CAROUSEL (NAVY BLUE & YELLOW THEMED DECK) */}
-            <FeatureCarousel />
-
-            <div className="text-center mt-12">
-              <button
-                type="button"
-                onClick={() => scrollTo("#formulario")}
-                className="bg-[#0F172A] text-white hover:bg-slate-800 font-extrabold px-8 py-3.5 rounded-full text-[14.5px] transition-all shadow-lg active:scale-95 inline-flex items-center gap-2.5"
-              >
-                Quero atrair mais pacientes
-                <ArrowRight className="w-4 h-4 text-[#FFD400]" />
-              </button>
-            </div>
-          </div>
-        </section>
+        <SolutionsSection onCtaClick={() => scrollTo("#formulario")} />
 
         {/* ════════════════════════════════════════════════════════════
             06. FAQ & SEÇÃO FINAL WITH SHADER BACKGROUND

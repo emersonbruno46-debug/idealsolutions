@@ -2,15 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import {
-  ArrowRight,
-  Compass,
-  Smartphone,
-  LayoutTemplate,
-  Target,
-  BarChart3,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Autoplay, EffectCards, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -33,34 +25,6 @@ const mobileImages = [
   { src: "/solucoes/solucao-mobile-3.png", alt: "Landing Pages & Integrações - Mobile" },
   { src: "/solucoes/solucao-mobile-4.png", alt: "Posicionamento Odontológico - Mobile" },
   { src: "/solucoes/solucao-mobile-5.png", alt: "Captação Qualificada - Mobile" },
-];
-
-const servicePillars = [
-  {
-    icon: Compass,
-    title: "Gestão & Estratégia Digital",
-    description: "Planejamento editorial, linha de comunicação alinhada à sua clínica e calendário mensal de entregas.",
-  },
-  {
-    icon: Smartphone,
-    title: "Conteúdo Autoral para Instagram",
-    description: "Design de posts, carrosséis educativos, roteiros de Reels e orientações para captação de imagem.",
-  },
-  {
-    icon: LayoutTemplate,
-    title: "Landing Pages de Alta Conversão",
-    description: "Páginas exclusivas, rápidas e otimizadas para levar visitantes direto ao WhatsApp da clínica.",
-  },
-  {
-    icon: Target,
-    title: "Posicionamento & Captação Qualificada",
-    description: "Atraia pacientes buscando tratamentos particulares de alto valor ticket e diferenciação de marca.",
-  },
-  {
-    icon: BarChart3,
-    title: "Acompanhamento de Resultados",
-    description: "Métricas transparentes e otimização contínua para maximizar o retorno dos seus investimentos.",
-  },
 ];
 
 interface SolutionsSectionProps {
@@ -86,41 +50,38 @@ export default function SolutionsSection({ onCtaClick }: SolutionsSectionProps) 
   };
 
   return (
-    <section id="solucoes" className="py-16 sm:py-24 bg-[#0F172A] text-white border-b border-slate-800 overflow-hidden relative">
-      {/* Glow ambient background */}
-      <div className="absolute top-1/4 left-0 w-96 h-96 bg-[#FFD400]/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
-
+    <section id="solucoes" className="py-16 sm:py-24 bg-white text-[#0F172A] border-b border-slate-200 relative overflow-hidden">
       <div className="max-w-[1240px] mx-auto px-5 sm:px-8 relative z-10">
         
         {/* Cabeçalho da Seção */}
-        <div className="max-w-3xl mb-12 md:mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-[12px] font-extrabold tracking-wider text-[#FFD400] uppercase mb-4 shadow-sm">
-            <Sparkles className="w-3.5 h-3.5" />
-            NOSSAS SOLUÇÕES
-          </div>
-          <h2 className="text-[28px] sm:text-[40px] lg:text-[44px] font-black text-white leading-[1.15] tracking-tight mb-4">
-            Estrutura completa de marketing para sua clínica odontológica.
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
+          <span className="text-[#0F172A] font-extrabold text-[12px] uppercase tracking-widest bg-slate-100 px-3.5 py-1 rounded-full border border-slate-200 inline-block shadow-sm">
+            Nossas Soluções
+          </span>
+          <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18] text-[#0F172A] tracking-tight">
+            As soluções que estruturam a presença digital da sua clínica.
           </h2>
-          <p className="text-[16px] sm:text-[18px] text-slate-300 leading-relaxed font-normal">
-            Combinamos posicionamento visual de excelência, páginas de alta performance e estratégia contínua para atrair pacientes particulares.
-          </p>
         </div>
 
-        {/* Layout Grid: Esquerda = Carrossel de Cartas | Direita = Texto de Apoio */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+        {/* Layout Grid: Esquerda = Carrossel de Cartas | Direita = Texto Resumido */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Coluna da Esquerda: Carrossel 3D (Skiper / Swiper Cards) */}
-          <div className="lg:col-span-6 flex flex-col items-center justify-center w-full min-h-[400px]">
+          <div className="lg:col-span-7 flex flex-col items-center justify-center w-full min-h-[340px] sm:min-h-[400px]">
             
-            {/* Versão DESKTOP: Imagens Horizontais (visível em telas md+) */}
+            {/* Versão DESKTOP: Imagens Horizontais 1672x941 (Proporção Exata 1.7768:1 -> 550px x 309px) */}
             <div className="hidden md:block w-full">
               <style>{`
+                .SwiperCardsDesktop {
+                  width: 550px !important;
+                  height: 309px !important;
+                }
                 .SwiperCardsDesktop .swiper-slide {
-                  border-radius: 1.5rem;
+                  border-radius: 1.25rem;
                   overflow: hidden;
-                  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-                  border: 1px solid rgba(255,255,255,0.1);
+                  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+                  border: 1px solid rgba(0,0,0,0.08);
+                  background: transparent;
                 }
               `}</style>
               <motion.div
@@ -128,7 +89,7 @@ export default function SolutionsSection({ onCtaClick }: SolutionsSectionProps) 
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="relative w-full max-w-[540px] mx-auto flex items-center justify-center py-4"
+                className="relative w-full flex items-center justify-center py-2"
               >
                 <Swiper
                   effect="cards"
@@ -138,13 +99,13 @@ export default function SolutionsSection({ onCtaClick }: SolutionsSectionProps) 
                     delay: 2800,
                     disableOnInteraction: false,
                   }}
-                  className="SwiperCardsDesktop h-[320px] w-[500px]"
+                  className="SwiperCardsDesktop"
                   modules={[EffectCards, Autoplay, Pagination, Navigation]}
                 >
                   {desktopImages.map((image, index) => (
-                    <SwiperSlide key={index} className="bg-slate-900">
+                    <SwiperSlide key={index}>
                       <img
-                        className="h-full w-full object-cover select-none"
+                        className="w-full h-full object-fill block select-none rounded-2xl"
                         src={image.src}
                         alt={image.alt}
                       />
@@ -154,14 +115,19 @@ export default function SolutionsSection({ onCtaClick }: SolutionsSectionProps) 
               </motion.div>
             </div>
 
-            {/* Versão MOBILE: Imagens Verticais (visível em telas < md) */}
+            {/* Versão MOBILE: Imagens Verticais 1122x1402 (Proporção Exata 0.8:1 -> 280px x 350px) */}
             <div className="block md:hidden w-full">
               <style>{`
+                .SwiperCardsMobile {
+                  width: 280px !important;
+                  height: 350px !important;
+                }
                 .SwiperCardsMobile .swiper-slide {
-                  border-radius: 1.5rem;
+                  border-radius: 1.25rem;
                   overflow: hidden;
-                  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-                  border: 1px solid rgba(255,255,255,0.1);
+                  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+                  border: 1px solid rgba(0,0,0,0.08);
+                  background: transparent;
                 }
               `}</style>
               <motion.div
@@ -169,7 +135,7 @@ export default function SolutionsSection({ onCtaClick }: SolutionsSectionProps) 
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="relative w-full max-w-[300px] mx-auto flex items-center justify-center py-4"
+                className="relative w-full flex items-center justify-center py-2"
               >
                 <Swiper
                   effect="cards"
@@ -179,13 +145,13 @@ export default function SolutionsSection({ onCtaClick }: SolutionsSectionProps) 
                     delay: 2800,
                     disableOnInteraction: false,
                   }}
-                  className="SwiperCardsMobile h-[380px] w-[260px]"
+                  className="SwiperCardsMobile"
                   modules={[EffectCards, Autoplay, Pagination, Navigation]}
                 >
                   {mobileImages.map((image, index) => (
-                    <SwiperSlide key={index} className="bg-slate-900">
+                    <SwiperSlide key={index}>
                       <img
-                        className="h-full w-full object-cover select-none"
+                        className="w-full h-full object-fill block select-none rounded-2xl"
                         src={image.src}
                         alt={image.alt}
                       />
@@ -195,59 +161,32 @@ export default function SolutionsSection({ onCtaClick }: SolutionsSectionProps) 
               </motion.div>
             </div>
 
-            <p className="text-[12px] text-slate-400 mt-4 text-center tracking-wide uppercase font-medium">
+            <p className="text-[12px] text-slate-500 mt-4 text-center tracking-wide uppercase font-semibold">
               Arraste os cards para explorar os modelos
             </p>
           </div>
 
-          {/* Coluna da Direita: Texto de Apoio sobre os Serviços */}
-          <div className="lg:col-span-6 space-y-6">
+          {/* Coluna da Direita: Texto Resumido */}
+          <div className="lg:col-span-5 space-y-5 text-left">
             <div className="space-y-3">
-              <h3 className="text-[22px] sm:text-[28px] font-bold text-white tracking-tight leading-snug">
-                Serviços planejados sob medida para o crescimento do seu consultório.
+              <h3 className="text-[22px] sm:text-[26px] font-black text-[#0F172A] tracking-tight leading-snug">
+                Estrutura sob medida para sua clínica.
               </h3>
-              <p className="text-[15px] text-slate-300 leading-relaxed">
-                Não trabalhamos com pacotes engessados. Analisamos o momento atual da sua clínica e estruturamos exatamente os pilares que trarão maior retorno de pacientes e autoridade.
+              <p className="text-[15px] sm:text-[16px] text-slate-600 leading-relaxed font-medium">
+                Desenvolvemos estratégias personalizadas para atrair pacientes particulares, fortalecendo sua autoridade no mercado odontológico.
               </p>
             </div>
 
-            {/* Lista de Pilares / Serviços */}
-            <div className="space-y-3.5 pt-2">
-              {servicePillars.map((pillar, idx) => {
-                const Icon = pillar.icon;
-                return (
-                  <div
-                    key={idx}
-                    className="p-4 sm:p-4.5 rounded-2xl bg-slate-900/90 border border-slate-800/90 hover:border-[#FFD400]/50 transition-all duration-300 flex items-start gap-4 group"
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700/80 flex items-center justify-center text-[#FFD400] flex-shrink-0 group-hover:scale-105 transition-transform">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-[15px] font-extrabold text-white group-hover:text-[#FFD400] transition-colors">
-                        {pillar.title}
-                      </h4>
-                      <p className="text-[13px] text-slate-300 leading-relaxed">
-                        {pillar.description}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Botão de Ação */}
-            <div className="pt-3">
+            <div className="pt-2">
               <button
                 type="button"
                 onClick={scrollToForm}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 h-[52px] px-8 rounded-full bg-[#FFD400] text-[#0F172A] text-[15px] font-extrabold hover:bg-[#FACC15] active:scale-[0.98] transition-all shadow-[0_4px_20px_rgba(255,212,0,0.3)]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 h-[50px] px-8 rounded-full bg-[#0F172A] text-white text-[14.5px] font-extrabold hover:bg-slate-800 active:scale-[0.98] transition-all shadow-md"
               >
-                Quero um plano ideal para minha clínica
-                <ArrowRight className="w-4.5 h-4.5" />
+                Quero atrair mais pacientes
+                <ArrowRight className="w-4 h-4 text-[#FFD400]" />
               </button>
             </div>
-
           </div>
 
         </div>
