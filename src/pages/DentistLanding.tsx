@@ -716,29 +716,29 @@ export default function DentistLanding() {
         {/* ════════════════════════════════════════════════════════════
             03. QUEM SOMOS
         ════════════════════════════════════════════════════════════ */}
-        <section id="sobre" className="py-16 sm:py-24 bg-[#F8FAFC] text-[#0F172A] border-b border-slate-200">
+        <section id="sobre" className="py-16 sm:py-24 bg-white text-[#0F172A] border-b border-slate-200">
           <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
-            <div className="grid lg:grid-cols-12 gap-12 items-center">
+            <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
               
-              <div className="lg:col-span-6 space-y-5">
-                <span className="text-[#0F172A] font-extrabold text-[12px] uppercase tracking-widest bg-[#FFD400] px-3.5 py-1 rounded-full inline-block">
+              <div className="lg:col-span-5 space-y-5">
+                <span className="text-[#0F172A] font-extrabold text-[12px] uppercase tracking-widest bg-[#FFD400] px-3.5 py-1 rounded-full inline-block shadow-sm">
                   Quem Somos
                 </span>
                 <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18] tracking-tight text-[#0F172A]">
-                  Especialização em presença digital para odontologia.
+                  Especialização em <strong className="font-black text-[#0F172A]">presença digital</strong> para odontologia.
                 </h2>
-                <p className="text-[15px] sm:text-[16px] text-slate-700 leading-relaxed">
-                  A Ideal Solutions atua no mercado de marketing e presença digital desde 2024, desenvolvendo estratégias estruturadas para empresas e profissionais de saúde.
+                <p className="text-[15px] sm:text-[16.5px] text-slate-700 leading-relaxed font-normal">
+                  A <strong className="font-extrabold text-[#0F172A]">Ideal Solutions</strong> atua no mercado de <strong className="font-extrabold text-[#0F172A]">marketing e presença digital</strong> desde 2024, desenvolvendo <strong className="font-extrabold text-[#0F172A]">estratégias estruturadas</strong> para empresas e profissionais de saúde.
                 </p>
-                <p className="text-[15px] sm:text-[16px] text-slate-700 leading-relaxed">
-                  Com o tempo, direcionamos parte importante de nossa atuação para o setor odontológico, combinando criação de landing pages de alta clareza, planejamento de conteúdo para Instagram e acompanhamento próximo de métricas.
+                <p className="text-[15px] sm:text-[16.5px] text-slate-700 leading-relaxed font-normal">
+                  Com o tempo, direcionamos nossa atuação para o <strong className="font-extrabold text-[#0F172A]">setor odontológico</strong>, combinando criação de <strong className="font-extrabold text-[#0F172A]">landing pages de alta conversão</strong>, planejamento de <strong className="font-extrabold text-[#0F172A]">conteúdo para Instagram</strong> e <strong className="font-extrabold text-[#0F172A]">acompanhamento próximo de métricas</strong>.
                 </p>
 
                 <div className="pt-2">
                   <button
                     type="button"
                     onClick={() => scrollTo("#formulario")}
-                    className="bg-[#0F172A] text-white hover:bg-slate-800 font-extrabold px-6 py-3 rounded-full text-[14px] transition-all inline-flex items-center gap-2"
+                    className="bg-[#0F172A] text-white hover:bg-slate-800 font-extrabold px-6 py-3 rounded-full text-[14px] transition-all inline-flex items-center gap-2 shadow-md"
                   >
                     Quero atrair mais pacientes
                     <ArrowRight className="w-4 h-4 text-[#FFD400]" />
@@ -746,12 +746,12 @@ export default function DentistLanding() {
                 </div>
               </div>
 
-              {/* Image Quem Somos */}
-              <div className="lg:col-span-6 flex items-center justify-center">
+              {/* Image Quem Somos (Expanded Column & Scale) */}
+              <div className="lg:col-span-7 flex items-center justify-center lg:justify-end">
                 <img
                   src="/quem-somos.png"
                   alt="Quem Somos - Ideal Solutions"
-                  className="w-full h-auto object-contain select-none"
+                  className="w-full max-w-[680px] lg:max-w-none h-auto object-contain select-none"
                 />
               </div>
 
