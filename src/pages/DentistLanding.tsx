@@ -786,17 +786,16 @@ export default function DentistLanding() {
               {/* Left Column: Completely Free 3D Logo Floating & Swaying */}
               <div className="lg:col-span-5 flex items-center justify-center lg:justify-start py-4">
                 <img
-                  src="/metodo-3d-logo.png?v=2"
+                  src="/metodo-3d-logo.png?v=5"
                   alt="Logo Ideal Solutions 3D"
                   className="w-full max-w-[360px] sm:max-w-[420px] lg:max-w-[460px] h-auto object-contain animate-float-sway filter drop-shadow-[0_25px_45px_rgba(0,0,0,0.65)] pointer-events-none"
                 />
               </div>
 
-              {/* Right Column: Stacked Método Steps with Premium Hover Reveal */}
-              <div className="lg:col-span-7 space-y-3.5">
+              {/* Right Column: Stacked Método Steps with Clean Titles & First Letter Highlight */}
+              <div className="lg:col-span-7 space-y-4">
                 {[
                   {
-                    letter: "I",
                     step: "01",
                     title: "Imersão",
                     short: "Entendemos sua clínica, seus serviços, seu público e sua presença digital.",
@@ -804,7 +803,6 @@ export default function DentistLanding() {
                     highlight: "Diagnóstico completo & Mapeamento de Oportunidades"
                   },
                   {
-                    letter: "D",
                     step: "02",
                     title: "Direção Estratégica",
                     short: "Definimos prioridades, comunicação e soluções adequadas aos seus objetivos.",
@@ -812,7 +810,6 @@ export default function DentistLanding() {
                     highlight: "Planejamento de Marca & Posicionamento Odontológico"
                   },
                   {
-                    letter: "E",
                     step: "03",
                     title: "Execução",
                     short: "Criamos os materiais e orientamos sua equipe para produção de fotos e vídeos.",
@@ -820,7 +817,6 @@ export default function DentistLanding() {
                     highlight: "Landing Page Exclusiva + Roteiros de Conteúdo"
                   },
                   {
-                    letter: "A",
                     step: "04",
                     title: "Acompanhamento Próximo",
                     short: "Organizamos aprovações e acompanhamos entregas e indicadores.",
@@ -828,7 +824,6 @@ export default function DentistLanding() {
                     highlight: "Acompanhamento de Resultados & Alinhamentos"
                   },
                   {
-                    letter: "L",
                     step: "05",
                     title: "Lapidação Contínua",
                     short: "Ajustamos a comunicação com base em dados e no retorno da sua equipe.",
@@ -837,12 +832,15 @@ export default function DentistLanding() {
                   },
                 ].map((m, index) => {
                   const isExpanded = activeMetodo === index;
+                  const firstLetter = m.title[0];
+                  const restOfWord = m.title.slice(1);
+
                   return (
                     <div
                       key={index}
                       onMouseEnter={() => setActiveMetodo(index)}
                       onClick={() => setActiveMetodo(index)}
-                      className={`group relative rounded-2xl p-5 sm:p-5.5 transition-all duration-300 cursor-pointer overflow-hidden ${
+                      className={`group relative rounded-2xl p-5 sm:p-6 transition-all duration-300 cursor-pointer overflow-hidden ${
                         isExpanded
                           ? "bg-slate-900/90 border border-[#FFD400]/80 shadow-[0_10px_30px_rgba(255,212,0,0.12)] ring-1 ring-[#FFD400]/40"
                           : "bg-slate-900/60 border border-white/10 hover:border-slate-700 hover:bg-slate-900/80"
@@ -850,48 +848,37 @@ export default function DentistLanding() {
                     >
                       {/* Active Left Indicator Accent */}
                       {isExpanded && (
-                        <div className="absolute left-0 top-3 bottom-3 w-1 bg-[#FFD400] rounded-r-full shadow-[0_0_12px_#FFD400]" />
+                        <div className="absolute left-0 top-3 bottom-3 w-1.5 bg-[#FFD400] rounded-r-full shadow-[0_0_12px_#FFD400]" />
                       )}
 
-                      <div className="flex items-start gap-4">
-                        {/* Letter Badge */}
-                        <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center font-black text-[18px] sm:text-[20px] transition-all duration-300 flex-shrink-0 ${
-                          isExpanded
-                            ? "bg-[#FFD400] text-[#0F172A] shadow-[0_4px_14px_rgba(255,212,0,0.35)] scale-105"
-                            : "bg-slate-800/90 border border-white/10 text-slate-300 group-hover:border-[#FFD400]/40 group-hover:text-white"
-                        }`}>
-                          {m.letter}
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-extrabold text-[19px] sm:text-[21px] tracking-tight text-white flex items-baseline gap-0.5">
+                            <span className="text-[#FFD400] font-black text-[25px] sm:text-[27px] leading-none">
+                              {firstLetter}
+                            </span>
+                            <span>{restOfWord}</span>
+                          </h3>
+                          <span className={`text-[12.5px] font-extrabold ${isExpanded ? "text-[#FFD400]" : "text-slate-500"}`}>
+                            {m.step}
+                          </span>
                         </div>
 
-                        {/* Text Content */}
-                        <div className="flex-1 space-y-1">
-                          <div className="flex items-center justify-between">
-                            <h3 className={`font-black text-[17px] sm:text-[19px] transition-colors ${
-                              isExpanded ? "text-[#FFD400]" : "text-white group-hover:text-slate-200"
-                            }`}>
-                              {m.letter} — {m.title}
-                            </h3>
-                            <span className={`text-[12px] font-extrabold ${isExpanded ? "text-[#FFD400]" : "text-slate-500"}`}>
-                              {m.step}
-                            </span>
-                          </div>
+                        <p className="text-[13.5px] sm:text-[14.5px] text-slate-300 font-medium leading-relaxed">
+                          {m.short}
+                        </p>
 
-                          <p className="text-[13.5px] sm:text-[14px] text-slate-300 font-medium leading-relaxed">
-                            {m.short}
-                          </p>
-
-                          {/* Hover Reveal Block */}
-                          <div className={`grid transition-all duration-300 ease-in-out ${
-                            isExpanded ? "grid-rows-[1fr] opacity-100 mt-3 pt-3 border-t border-slate-800/90" : "grid-rows-[0fr] opacity-0"
-                          }`}>
-                            <div className="overflow-hidden space-y-2.5">
-                              <p className="text-[13px] sm:text-[13.5px] text-slate-300 leading-relaxed">
-                                {m.detail}
-                              </p>
-                              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFD400]/10 border border-[#FFD400]/30 text-[#FFD400] text-[12px] font-extrabold">
-                                <CheckCircle2 className="w-3.5 h-3.5" />
-                                <span>{m.highlight}</span>
-                              </div>
+                        {/* Hover Reveal Block */}
+                        <div className={`grid transition-all duration-300 ease-in-out ${
+                          isExpanded ? "grid-rows-[1fr] opacity-100 mt-3.5 pt-3.5 border-t border-slate-800/90" : "grid-rows-[0fr] opacity-0"
+                        }`}>
+                          <div className="overflow-hidden space-y-2.5">
+                            <p className="text-[13px] sm:text-[14px] text-slate-300 leading-relaxed">
+                              {m.detail}
+                            </p>
+                            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FFD400]/10 border border-[#FFD400]/30 text-[#FFD400] text-[12px] sm:text-[12.5px] font-extrabold">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>{m.highlight}</span>
                             </div>
                           </div>
                         </div>
