@@ -725,13 +725,13 @@ export default function DentistLanding() {
                   Quem Somos
                 </span>
                 <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18] tracking-tight text-[#0F172A]">
-                  Especialização em <strong className="font-black text-[#0F172A]">presença digital</strong> para odontologia.
+                  Especialização em presença digital para odontologia.
                 </h2>
                 <p className="text-[15px] sm:text-[16.5px] text-slate-700 leading-relaxed font-normal">
-                  A <strong className="font-extrabold text-[#0F172A]">Ideal Solutions</strong> atua no mercado de <strong className="font-extrabold text-[#0F172A]">marketing e presença digital</strong> desde 2024, desenvolvendo <strong className="font-extrabold text-[#0F172A]">estratégias estruturadas</strong> para empresas e profissionais de saúde.
+                  A Ideal Solutions atua no mercado de marketing e presença digital desde 2024, desenvolvendo estratégias estruturadas para empresas e profissionais de saúde.
                 </p>
                 <p className="text-[15px] sm:text-[16.5px] text-slate-700 leading-relaxed font-normal">
-                  Com o tempo, direcionamos nossa atuação para o <strong className="font-extrabold text-[#0F172A]">setor odontológico</strong>, combinando criação de <strong className="font-extrabold text-[#0F172A]">landing pages de alta conversão</strong>, planejamento de <strong className="font-extrabold text-[#0F172A]">conteúdo para Instagram</strong> e <strong className="font-extrabold text-[#0F172A]">acompanhamento próximo de métricas</strong>.
+                  Com o tempo, direcionamos nossa atuação para o setor odontológico, combinando criação de landing pages de alta conversão, planejamento de conteúdo para Instagram e acompanhamento próximo de métricas.
                 </p>
 
                 <div className="pt-2">
@@ -746,7 +746,7 @@ export default function DentistLanding() {
                 </div>
               </div>
 
-              {/* Image Quem Somos (Expanded Column & Scale) */}
+              {/* Image Quem Somos */}
               <div className="lg:col-span-7 flex items-center justify-center lg:justify-end">
                 <img
                   src="/quem-somos.png"
@@ -780,7 +780,7 @@ export default function DentistLanding() {
               </p>
             </div>
 
-            {/* Split Grid Layout: Left Floating 3D Logo | Right Stacked Hover Reveal */}
+            {/* Split Grid Layout: Left Floating 3D Logo | Right Stacked Hover Reveal forming I-D-E-A-L */}
             <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
               
               {/* Left Column: Completely Free 3D Logo Floating & Swaying */}
@@ -792,8 +792,13 @@ export default function DentistLanding() {
                 />
               </div>
 
-              {/* Right Column: Stacked Método Steps with Clean Titles & First Letter Highlight */}
-              <div className="lg:col-span-7 space-y-4">
+              {/* Right Column: Stacked Método Steps forming I-D-E-A-L without boxes */}
+              <div className="lg:col-span-7 space-y-1">
+                <div className="text-[12px] font-bold text-[#FFD400] uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" />
+                  Passe o mouse sobre cada fase para revelar os detalhes
+                </div>
+
                 {[
                   {
                     step: "01",
@@ -840,46 +845,38 @@ export default function DentistLanding() {
                       key={index}
                       onMouseEnter={() => setActiveMetodo(index)}
                       onClick={() => setActiveMetodo(index)}
-                      className={`group relative rounded-2xl p-5 sm:p-6 transition-all duration-300 cursor-pointer overflow-hidden ${
-                        isExpanded
-                          ? "bg-slate-900/90 border border-[#FFD400]/80 shadow-[0_10px_30px_rgba(255,212,0,0.12)] ring-1 ring-[#FFD400]/40"
-                          : "bg-slate-900/60 border border-white/10 hover:border-slate-700 hover:bg-slate-900/80"
+                      className={`group py-2.5 px-3 rounded-xl transition-all duration-200 cursor-pointer border-b border-slate-800/80 hover:bg-slate-900/40 ${
+                        isExpanded ? "bg-slate-900/60" : ""
                       }`}
                     >
-                      {/* Active Left Indicator Accent */}
-                      {isExpanded && (
-                        <div className="absolute left-0 top-3 bottom-3 w-1.5 bg-[#FFD400] rounded-r-full shadow-[0_0_12px_#FFD400]" />
-                      )}
-
-                      <div className="space-y-1.5">
-                        <div className="flex items-center justify-between">
-                          <h3 className="font-extrabold text-[19px] sm:text-[21px] tracking-tight text-white flex items-baseline gap-0.5">
-                            <span className="text-[#FFD400] font-black text-[25px] sm:text-[27px] leading-none">
-                              {firstLetter}
-                            </span>
-                            <span>{restOfWord}</span>
-                          </h3>
-                          <span className={`text-[12.5px] font-extrabold ${isExpanded ? "text-[#FFD400]" : "text-slate-500"}`}>
-                            {m.step}
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-extrabold text-[20px] sm:text-[22px] tracking-tight text-white flex items-baseline gap-1">
+                          <span className="text-[#FFD400] font-black text-[28px] sm:text-[32px] leading-none inline-block w-6 text-center">
+                            {firstLetter}
                           </span>
-                        </div>
+                          <span className={isExpanded ? "text-white font-black" : "text-slate-200 group-hover:text-white"}>
+                            {restOfWord}
+                          </span>
+                        </h3>
+                        <span className={`text-[12px] font-extrabold tracking-wider ${isExpanded ? "text-[#FFD400]" : "text-slate-500"}`}>
+                          {m.step}
+                        </span>
+                      </div>
 
-                        <p className="text-[13.5px] sm:text-[14.5px] text-slate-300 font-medium leading-relaxed">
-                          {m.short}
-                        </p>
-
-                        {/* Hover Reveal Block */}
-                        <div className={`grid transition-all duration-300 ease-in-out ${
-                          isExpanded ? "grid-rows-[1fr] opacity-100 mt-3.5 pt-3.5 border-t border-slate-800/90" : "grid-rows-[0fr] opacity-0"
-                        }`}>
-                          <div className="overflow-hidden space-y-2.5">
-                            <p className="text-[13px] sm:text-[14px] text-slate-300 leading-relaxed">
-                              {m.detail}
-                            </p>
-                            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FFD400]/10 border border-[#FFD400]/30 text-[#FFD400] text-[12px] sm:text-[12.5px] font-extrabold">
-                              <CheckCircle2 className="w-3.5 h-3.5" />
-                              <span>{m.highlight}</span>
-                            </div>
+                      {/* Expandable Description Area */}
+                      <div className={`grid transition-all duration-300 ease-in-out ${
+                        isExpanded ? "grid-rows-[1fr] opacity-100 mt-2.5 pt-2.5 border-t border-slate-800/80" : "grid-rows-[0fr] opacity-0"
+                      }`}>
+                        <div className="overflow-hidden space-y-1.5 pl-7">
+                          <p className="text-[13px] sm:text-[13.5px] text-slate-300 leading-relaxed font-medium">
+                            {m.short}
+                          </p>
+                          <p className="text-[12.5px] text-slate-400 leading-normal">
+                            {m.detail}
+                          </p>
+                          <div className="inline-flex items-center gap-1.5 pt-1 text-[#FFD400] text-[11.5px] font-bold">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span>{m.highlight}</span>
                           </div>
                         </div>
                       </div>
