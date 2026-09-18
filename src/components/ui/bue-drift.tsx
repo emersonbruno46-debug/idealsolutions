@@ -5,7 +5,7 @@
 // parent. Drop it behind your content with
 // <div className="relative"><ShaderBackground className="absolute inset-0" />…
 
-import { useEffect, useRef } from "react"
+import React, { useEffect, useRef } from "react"
 
 const VERT = `attribute vec2 a_position;
 void main() {
@@ -314,7 +314,7 @@ const UNIFORMS = {
 
 const pendingContextReleases = new WeakMap<HTMLCanvasElement, number>()
 
-export function ShaderBackground({ className }: { className?: string }) {
+function ShaderBackgroundComponent({ className }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -428,7 +428,7 @@ export function ShaderBackground({ className }: { className?: string }) {
       )
       const width = Math.max(1, Math.round(rawWidth * pixelScale))
       const height = Math.max(1, Math.round(rawHeight * pixelScale))
-      if (canvas.width !== width || canvas.height !== height) {
+      if (Math.abs(canvas.width - width) > 10 || Math.abs(canvas.height - height) > 10) {
         canvas.width = width
         canvas.height = height
         gl.viewport(0, 0, width, height)
@@ -591,3 +591,5 @@ export function ShaderBackground({ className }: { className?: string }) {
     <canvas ref={canvasRef} className={className} style={{ display: "block", width: "100%", height: "100%" }} />
   )
 }
+
+export const ShaderBackground = React.memo(ShaderBackgroundComponent)

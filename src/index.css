@@ -51,6 +51,18 @@ body {
 }
 .animate-fadeIn { animation: fadeIn 0.3s ease-out both; }
 
+@keyframes floatSway {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(1.8deg);
+  }
+}
+.animate-float-sway {
+  animation: floatSway 4.5s ease-in-out infinite;
+}
+
 input[type="checkbox"], input[type="radio"] {
   accent-color: #FFD400;
 }

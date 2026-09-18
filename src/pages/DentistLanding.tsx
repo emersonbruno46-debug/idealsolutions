@@ -760,7 +760,7 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            04. MÉTODO IDEAL WITH 3D LOGO & STACKED HOVER REVEAL
+            04. MÉTODO IDEAL WITH FLOATING 3D LOGO & STACKED HOVER REVEAL
         ════════════════════════════════════════════════════════════ */}
         <section id="metodo" className="relative bg-[#0F172A] text-white py-16 sm:py-24 border-b border-slate-800 overflow-hidden">
           <ShaderBackground className="absolute inset-0 opacity-30 pointer-events-none" />
@@ -780,24 +780,19 @@ export default function DentistLanding() {
               </p>
             </div>
 
-            {/* Split Grid Layout: Left 3D Logo | Right Stacked Hover Reveal */}
-            <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            {/* Split Grid Layout: Left Floating 3D Logo | Right Stacked Hover Reveal */}
+            <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
               
-              {/* Left Column: 3D Gold Logo Showcase */}
-              <div className="lg:col-span-5 flex flex-col items-center justify-center relative group">
-                {/* Gold Radial Glow effect */}
-                <div className="absolute w-72 h-72 sm:w-96 sm:h-96 bg-[#FFD400]/15 rounded-full blur-3xl pointer-events-none group-hover:bg-[#FFD400]/25 transition-all duration-700" />
-                
-                <div className="relative z-10 p-6 sm:p-8 rounded-3xl bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.6)] flex items-center justify-center text-center">
-                  <img
-                    src="/metodo-3d-logo.png"
-                    alt="Logo Ideal Solutions 3D"
-                    className="w-64 sm:w-80 h-auto object-contain drop-shadow-[0_20px_35px_rgba(255,212,0,0.25)] group-hover:scale-105 transition-transform duration-500 ease-out"
-                  />
-                </div>
+              {/* Left Column: Completely Free 3D Logo Floating & Swaying */}
+              <div className="lg:col-span-5 flex items-center justify-center lg:justify-start py-4">
+                <img
+                  src="/metodo-3d-logo.png?v=2"
+                  alt="Logo Ideal Solutions 3D"
+                  className="w-full max-w-[360px] sm:max-w-[420px] lg:max-w-[460px] h-auto object-contain animate-float-sway filter drop-shadow-[0_25px_45px_rgba(0,0,0,0.65)] pointer-events-none"
+                />
               </div>
 
-              {/* Right Column: Stacked Método Steps with Hover Reveal */}
+              {/* Right Column: Stacked Método Steps with Premium Hover Reveal */}
               <div className="lg:col-span-7 space-y-3.5">
                 {[
                   {
@@ -847,18 +842,23 @@ export default function DentistLanding() {
                       key={index}
                       onMouseEnter={() => setActiveMetodo(index)}
                       onClick={() => setActiveMetodo(index)}
-                      className={`group relative rounded-2xl border p-5 sm:p-6 transition-all duration-300 cursor-pointer ${
+                      className={`group relative rounded-2xl p-5 sm:p-5.5 transition-all duration-300 cursor-pointer overflow-hidden ${
                         isExpanded
-                          ? "bg-slate-900/90 border-[#FFD400] shadow-[0_10px_30px_rgba(255,212,0,0.15)] ring-1 ring-[#FFD400]/40"
-                          : "bg-slate-900/50 border-slate-800 hover:border-slate-700 hover:bg-slate-900/70"
+                          ? "bg-slate-900/90 border border-[#FFD400]/80 shadow-[0_10px_30px_rgba(255,212,0,0.12)] ring-1 ring-[#FFD400]/40"
+                          : "bg-slate-900/60 border border-white/10 hover:border-slate-700 hover:bg-slate-900/80"
                       }`}
                     >
+                      {/* Active Left Indicator Accent */}
+                      {isExpanded && (
+                        <div className="absolute left-0 top-3 bottom-3 w-1 bg-[#FFD400] rounded-r-full shadow-[0_0_12px_#FFD400]" />
+                      )}
+
                       <div className="flex items-start gap-4">
                         {/* Letter Badge */}
                         <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center font-black text-[18px] sm:text-[20px] transition-all duration-300 flex-shrink-0 ${
                           isExpanded
-                            ? "bg-[#FFD400] text-[#0F172A] shadow-[0_4px_14px_rgba(255,212,0,0.4)] scale-105"
-                            : "bg-slate-800 text-slate-300 group-hover:bg-slate-700 group-hover:text-white"
+                            ? "bg-[#FFD400] text-[#0F172A] shadow-[0_4px_14px_rgba(255,212,0,0.35)] scale-105"
+                            : "bg-slate-800/90 border border-white/10 text-slate-300 group-hover:border-[#FFD400]/40 group-hover:text-white"
                         }`}>
                           {m.letter}
                         </div>
@@ -871,7 +871,7 @@ export default function DentistLanding() {
                             }`}>
                               {m.letter} — {m.title}
                             </h3>
-                            <span className="text-[12px] font-extrabold text-slate-400 group-hover:text-slate-300">
+                            <span className={`text-[12px] font-extrabold ${isExpanded ? "text-[#FFD400]" : "text-slate-500"}`}>
                               {m.step}
                             </span>
                           </div>
@@ -882,13 +882,13 @@ export default function DentistLanding() {
 
                           {/* Hover Reveal Block */}
                           <div className={`grid transition-all duration-300 ease-in-out ${
-                            isExpanded ? "grid-rows-[1fr] opacity-100 mt-3 pt-3 border-t border-slate-800/80" : "grid-rows-[0fr] opacity-0"
+                            isExpanded ? "grid-rows-[1fr] opacity-100 mt-3 pt-3 border-t border-slate-800/90" : "grid-rows-[0fr] opacity-0"
                           }`}>
-                            <div className="overflow-hidden space-y-2">
+                            <div className="overflow-hidden space-y-2.5">
                               <p className="text-[13px] sm:text-[13.5px] text-slate-300 leading-relaxed">
                                 {m.detail}
                               </p>
-                              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFD400]/10 border border-[#FFD400]/30 text-[#FFD400] text-[12px] font-extrabold mt-1">
+                              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFD400]/10 border border-[#FFD400]/30 text-[#FFD400] text-[12px] font-extrabold">
                                 <CheckCircle2 className="w-3.5 h-3.5" />
                                 <span>{m.highlight}</span>
                               </div>
@@ -900,7 +900,6 @@ export default function DentistLanding() {
                   );
                 })}
               </div>
-
             </div>
 
             <p className="text-[12.5px] text-slate-400 text-center mt-10 italic">
