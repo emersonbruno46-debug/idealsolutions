@@ -4,6 +4,7 @@ import {
   CheckCircle2, Check, Smartphone, Globe, Layers, ShieldCheck, Award, ChevronLeft, ChevronRight, Lock
 } from "lucide-react";
 import { ShaderBackground } from "@/components/ui/bue-drift";
+import FeatureCarousel from "@/components/ui/feature-carousel";
 
 /* ─── Smooth Scroll Helper ─── */
 function scrollTo(id: string) {
@@ -103,6 +104,40 @@ const TESTIMONIALS = [
     location: "Belo Horizonte - MG",
     text: "Padronização visual e criação de canal de captação de leads qualificados para procedimentos estéticos de maior complexidade.",
     type: "Presença Digital Completa"
+  }
+];
+
+/* ─── Soluções Items ─── */
+const SOLUCAO_ITEMS: GsapFlipCardItem[] = [
+  {
+    id: 1,
+    title: "Gestão e Estratégia Digital",
+    meta: "Estratégia & Acompanhamento",
+    description: "Planejamento, acompanhamento e organização contínua da presença digital da sua clínica odontológica.",
+    caption: "Estrutura estratégica completa: planejamento de comunicação, calendário editorial estruturado e acompanhamento próximo de indicadores.",
+    image: "/solucoes/solucao-1-portrait.png",
+    mobileImage: "/solucoes/solucao-1-landscape.png",
+    alt: "Gestão e Estratégia Digital para Odontologia"
+  },
+  {
+    id: 2,
+    title: "Conteúdo para Instagram",
+    meta: "Autoridade & Produção Visual",
+    description: "Comunicação, planejamento de publicações e produção dos materiais visuais previstos no escopo contratado.",
+    caption: "Design autoral de posts e carrosséis, roteiros estratégicos e orientação completa para gravação de Reels alinhados à sua marca.",
+    image: "/solucoes/solucao-2-portrait.png",
+    mobileImage: "/solucoes/solucao-2-landscape.png",
+    alt: "Conteúdo para Instagram Odontológico"
+  },
+  {
+    id: 3,
+    title: "Landing Pages & Integrações",
+    meta: "Alta Conversão & Captação",
+    description: "Páginas pensadas para apresentar seus tratamentos, diferenciais clínicos e facilitar novos agendamentos diretos no WhatsApp.",
+    caption: "Estrutura e redação focadas em clareza, design responsivo de carregamento ultra-rápido e conexão direta com WhatsApp e formulários.",
+    image: "/solucoes/solucao-3-portrait.png",
+    mobileImage: "/solucoes/solucao-3-landscape.png",
+    alt: "Landing Pages e Integrações Odontológicas"
   }
 ];
 
@@ -907,77 +942,30 @@ export default function DentistLanding() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════
-            05. SOLUÇÕES / ENTREGÁVEIS
+            05. SOLUÇÕES / ENTREGÁVEIS WITH FEATURE CAROUSEL
         ════════════════════════════════════════════════════════════ */}
-        <section id="solucoes" className="py-16 sm:py-24 bg-white text-[#0F172A]">
-          <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-2">
-              <span className="text-[#0F172A] font-extrabold text-[12px] uppercase tracking-widest bg-slate-100 px-3.5 py-1 rounded-full border border-slate-200 inline-block">
+        <section id="solucoes" className="py-16 sm:py-24 bg-white text-[#0F172A] border-b border-slate-200 relative overflow-hidden">
+          <div className="max-w-[1240px] mx-auto px-5 sm:px-8 relative z-10">
+            <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
+              <span className="text-[#0F172A] font-extrabold text-[12px] uppercase tracking-widest bg-slate-100 px-3.5 py-1 rounded-full border border-slate-200 inline-block shadow-sm">
                 Nossas Soluções
               </span>
-              <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18] text-[#0F172A]">
+              <h2 className="text-[28px] sm:text-[38px] font-black leading-[1.18] text-[#0F172A] tracking-tight">
                 As soluções que estruturam a presença digital da sua clínica.
               </h2>
-              <p className="text-[15px] text-slate-600">
-                A Ideal monta a estrutura conforme as necessidades específicas do seu negócio.
+              <p className="text-[15px] sm:text-[16.5px] text-slate-600 font-medium">
+                A Ideal monta a estrutura conforme as necessidades específicas do seu negócio. Clique nos itens para navegar.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              {/* Pillar 1 */}
-              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-7 hover:border-[#FFD400] transition-all shadow-sm">
-                <div className="w-11 h-11 rounded-xl bg-slate-900 text-[#FFD400] flex items-center justify-center mb-5">
-                  <Layers className="w-5 h-5" />
-                </div>
-                <h3 className="text-[18px] font-black text-[#0F172A] mb-2">GESTÃO E ESTRATÉGIA DIGITAL</h3>
-                <p className="text-[13.5px] text-slate-600 mb-5 leading-relaxed">
-                  Planejamento, acompanhamento e organização contínua da presença digital da sua clínica.
-                </p>
-                <ul className="space-y-2 text-[13px] text-slate-700 font-medium border-t border-slate-200 pt-4">
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Planejamento de comunicação</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Calendário editorial estruturado</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Acompanhamento de indicadores</li>
-                </ul>
-              </div>
+            {/* FEATURE CAROUSEL (NAVY BLUE & YELLOW THEMED DECK) */}
+            <FeatureCarousel />
 
-              {/* Pillar 2 */}
-              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-7 hover:border-[#FFD400] transition-all shadow-sm">
-                <div className="w-11 h-11 rounded-xl bg-slate-900 text-[#FFD400] flex items-center justify-center mb-5">
-                  <Smartphone className="w-5 h-5" />
-                </div>
-                <h3 className="text-[18px] font-black text-[#0F172A] mb-2">CONTEÚDO PARA INSTAGRAM</h3>
-                <p className="text-[13.5px] text-slate-600 mb-5 leading-relaxed">
-                  Comunicação, planejamento e produção dos materiais visuais previstos no escopo contratado.
-                </p>
-                <ul className="space-y-2 text-[13px] text-slate-700 font-medium border-t border-slate-200 pt-4">
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Design de posts e carrosséis</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Roteiros e orientação para Reels</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Padrão visual alinhado à marca</li>
-                </ul>
-              </div>
-
-              {/* Pillar 3 */}
-              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-7 hover:border-[#FFD400] transition-all shadow-sm">
-                <div className="w-11 h-11 rounded-xl bg-slate-900 text-[#FFD400] flex items-center justify-center mb-5">
-                  <Globe className="w-5 h-5" />
-                </div>
-                <h3 className="text-[18px] font-black text-[#0F172A] mb-2">LANDING PAGES & INTEGRAÇÕES</h3>
-                <p className="text-[13.5px] text-slate-600 mb-5 leading-relaxed">
-                  Páginas pensadas para apresentar serviços, diferenciais e facilitar conversões e contatos.
-                </p>
-                <ul className="space-y-2 text-[13px] text-slate-700 font-medium border-t border-slate-200 pt-4">
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Estrutura e redação focadas em clareza</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Design responsivo de carregamento rápido</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" /> Conexão com WhatsApp e formulários</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="text-center">
+            <div className="text-center mt-12">
               <button
                 type="button"
                 onClick={() => scrollTo("#formulario")}
-                className="bg-[#0F172A] text-white hover:bg-slate-800 font-extrabold px-7 py-3 rounded-full text-[14px] transition-all inline-flex items-center gap-2"
+                className="bg-[#0F172A] text-white hover:bg-slate-800 font-extrabold px-8 py-3.5 rounded-full text-[14.5px] transition-all shadow-lg active:scale-95 inline-flex items-center gap-2.5"
               >
                 Quero atrair mais pacientes
                 <ArrowRight className="w-4 h-4 text-[#FFD400]" />
