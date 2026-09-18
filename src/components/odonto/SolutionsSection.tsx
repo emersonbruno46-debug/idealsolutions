@@ -12,19 +12,19 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 const desktopImages = [
-  { src: "/solucoes/solucao-desktop-1.png", alt: "Gestão & Estratégia Odontológica - Desktop" },
-  { src: "/solucoes/solucao-desktop-2.png", alt: "Conteúdo para Instagram - Desktop" },
-  { src: "/solucoes/solucao-desktop-3.png", alt: "Landing Pages & Integrações - Desktop" },
-  { src: "/solucoes/solucao-desktop-4.png", alt: "Posicionamento Odontológico - Desktop" },
-  { src: "/solucoes/solucao-desktop-5.png", alt: "Captação Qualificada - Desktop" },
+  { src: "/solucoes/solucao-desktop-1.webp", alt: "Gestão & Estratégia Odontológica - Desktop" },
+  { src: "/solucoes/solucao-desktop-2.webp", alt: "Conteúdo para Instagram - Desktop" },
+  { src: "/solucoes/solucao-desktop-3.webp", alt: "Landing Pages & Integrações - Desktop" },
+  { src: "/solucoes/solucao-desktop-4.webp", alt: "Posicionamento Odontológico - Desktop" },
+  { src: "/solucoes/solucao-desktop-5.webp", alt: "Captação Qualificada - Desktop" },
 ];
 
 const mobileImages = [
-  { src: "/solucoes/solucao-mobile-1.png", alt: "Gestão & Estratégia Odontológica - Mobile" },
-  { src: "/solucoes/solucao-mobile-2.png", alt: "Conteúdo para Instagram - Mobile" },
-  { src: "/solucoes/solucao-mobile-3.png", alt: "Landing Pages & Integrações - Mobile" },
-  { src: "/solucoes/solucao-mobile-4.png", alt: "Posicionamento Odontológico - Mobile" },
-  { src: "/solucoes/solucao-mobile-5.png", alt: "Captação Qualificada - Mobile" },
+  { src: "/solucoes/solucao-mobile-1.webp", alt: "Gestão & Estratégia Odontológica - Mobile" },
+  { src: "/solucoes/solucao-mobile-2.webp", alt: "Conteúdo para Instagram - Mobile" },
+  { src: "/solucoes/solucao-mobile-3.webp", alt: "Landing Pages & Integrações - Mobile" },
+  { src: "/solucoes/solucao-mobile-4.webp", alt: "Posicionamento Odontológico - Mobile" },
+  { src: "/solucoes/solucao-mobile-5.webp", alt: "Captação Qualificada - Mobile" },
 ];
 
 interface SolutionsSectionProps {

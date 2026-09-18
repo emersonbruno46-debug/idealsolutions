@@ -272,6 +272,8 @@ export default function DentistLanding() {
             <img
               src="/ideal-logo.png"
               alt="Ideal Solutions"
+              fetchPriority="high"
+              decoding="async"
               className="h-8 sm:h-9 w-auto object-contain brightness-0 invert"
               onError={e => {
                 const t = e.currentTarget;
@@ -749,8 +751,10 @@ export default function DentistLanding() {
               {/* Image Quem Somos */}
               <div className="lg:col-span-7 flex items-center justify-center lg:justify-end">
                 <img
-                  src="/quem-somos.png"
+                  src="/quem-somos.webp"
                   alt="Quem Somos - Ideal Solutions"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full max-w-[680px] lg:max-w-none h-auto object-contain select-none"
                 />
               </div>
@@ -786,8 +790,10 @@ export default function DentistLanding() {
               {/* Left Column: Completely Free 3D Logo Floating & Swaying */}
               <div className="lg:col-span-5 flex items-center justify-center lg:justify-start py-4">
                 <img
-                  src="/metodo-3d-logo.png?v=5"
+                  src="/metodo-3d-logo.webp"
                   alt="Logo Ideal Solutions 3D"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full max-w-[360px] sm:max-w-[420px] lg:max-w-[460px] h-auto object-contain animate-float-sway filter drop-shadow-[0_25px_45px_rgba(0,0,0,0.65)] pointer-events-none"
                 />
               </div>
