@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { ShaderBackground } from "@/components/ui/bue-drift";
 import FeatureCarousel from "@/components/ui/feature-carousel";
+import SolutionsSection from "@/components/odonto/SolutionsSection";
 
 /* ─── Smooth Scroll Helper ─── */
 function scrollTo(id: string) {
@@ -625,6 +626,11 @@ export default function DentistLanding() {
             </div>
           </div>
         </section>
+
+        {/* ════════════════════════════════════════════════════════════
+            SOLUÇÕES (CARROSSEL DE CARDS SKIPER 3D)
+        ════════════════════════════════════════════════════════════ */}
+        <SolutionsSection onCtaClick={() => scrollTo("#formulario")} />
 
         {/* ════════════════════════════════════════════════════════════
             02. DEPOIMENTOS / PROVA SOCIAL
