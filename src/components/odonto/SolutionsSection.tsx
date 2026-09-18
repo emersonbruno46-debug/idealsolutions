@@ -1,4 +1,4 @@
-"use client";
+
 
 import React from "react";
 import { motion } from "framer-motion";
@@ -94,7 +94,7 @@ export default function SolutionsSection({ onCtaClick }: SolutionsSectionProps) 
                 <Swiper
                   effect="cards"
                   grabCursor={true}
-                  loop={true}
+                  loop={false}
                   autoplay={{
                     delay: 2800,
                     disableOnInteraction: false,
@@ -140,7 +140,7 @@ export default function SolutionsSection({ onCtaClick }: SolutionsSectionProps) 
                 <Swiper
                   effect="cards"
                   grabCursor={true}
-                  loop={true}
+                  loop={false}
                   autoplay={{
                     delay: 2800,
                     disableOnInteraction: false,

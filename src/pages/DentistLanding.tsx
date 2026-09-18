@@ -235,7 +235,9 @@ export default function DentistLanding() {
         ...utms,
         timestamp: new Date().toISOString(),
       };
-      console.log("[Lead Ideal Solutions]:", payload);
+      if (import.meta.env.DEV) {
+        console.log("[Lead Ideal Solutions]:", payload);
+      }
       await new Promise(r => setTimeout(r, 1000));
       setSuccess(true);
     } catch {
@@ -457,6 +459,7 @@ export default function DentistLanding() {
                           placeholder="Seu nome completo"
                           value={form.nome}
                           onChange={e => setField("nome", e.target.value)}
+                          autoComplete="name"
                           className={`w-full h-11.5 bg-slate-950/70 backdrop-blur-md border text-white placeholder-slate-400 px-5 rounded-full text-[13.5px] outline-none focus:border-[#FFD400] focus:ring-2 focus:ring-[#FFD400]/20 transition-all shadow-inner ${
                             errors.nome ? "border-red-500" : "border-slate-700/80"
                           }`}
@@ -474,6 +477,7 @@ export default function DentistLanding() {
                           placeholder="seu.email@exemplo.com.br"
                           value={form.email}
                           onChange={e => setField("email", e.target.value)}
+                          autoComplete="email"
                           className={`w-full h-11.5 bg-slate-950/70 backdrop-blur-md border text-white placeholder-slate-400 px-5 rounded-full text-[13.5px] outline-none focus:border-[#FFD400] focus:ring-2 focus:ring-[#FFD400]/20 transition-all shadow-inner ${
                             errors.email ? "border-red-500" : "border-slate-700/80"
                           }`}
@@ -491,6 +495,7 @@ export default function DentistLanding() {
                           placeholder="(11) 98765-4321"
                           value={form.whatsapp}
                           onChange={e => setField("whatsapp", fmtPhone(e.target.value))}
+                          autoComplete="tel"
                           className={`w-full h-11.5 bg-slate-950/70 backdrop-blur-md border text-white placeholder-slate-400 px-5 rounded-full text-[13.5px] outline-none focus:border-[#FFD400] focus:ring-2 focus:ring-[#FFD400]/20 transition-all shadow-inner ${
                             errors.whatsapp ? "border-red-500" : "border-slate-700/80"
                           }`}
@@ -508,6 +513,7 @@ export default function DentistLanding() {
                           placeholder="Nome da sua clínica ou consultório"
                           value={form.clinica}
                           onChange={e => setField("clinica", e.target.value)}
+                          autoComplete="organization"
                           className={`w-full h-11.5 bg-slate-950/70 backdrop-blur-md border text-white placeholder-slate-400 px-5 rounded-full text-[13.5px] outline-none focus:border-[#FFD400] focus:ring-2 focus:ring-[#FFD400]/20 transition-all shadow-inner ${
                             errors.clinica ? "border-red-500" : "border-slate-700/80"
                           }`}
@@ -852,6 +858,9 @@ export default function DentistLanding() {
                       onMouseEnter={() => setActiveMetodo(index)}
                       onMouseLeave={() => setActiveMetodo(null)}
                       onClick={() => setActiveMetodo(isExpanded ? null : index)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={e => e.key === 'Enter' && setActiveMetodo(isExpanded ? null : index)}
                       className={`group py-2.5 px-3 rounded-xl transition-all duration-200 cursor-pointer border-b border-slate-800/80 hover:bg-slate-900/40 ${
                         isExpanded ? "bg-slate-900/60" : ""
                       }`}
@@ -938,6 +947,7 @@ export default function DentistLanding() {
                     type="button"
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                     className="w-full flex items-center justify-between gap-4 p-4.5 sm:p-5 text-left font-bold text-[14.5px] text-white hover:text-[#FFD400] transition-colors"
+                    aria-expanded={openFaq === i}
                   >
                     <span>{item.q}</span>
                     {openFaq === i ? <Minus className="w-4 h-4 text-[#FFD400] flex-shrink-0" /> : <Plus className="w-4 h-4 text-slate-400 flex-shrink-0" />}
