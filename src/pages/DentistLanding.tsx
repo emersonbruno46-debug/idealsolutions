@@ -751,7 +751,7 @@ export default function DentistLanding() {
                 <img
                   src="/quem-somos.png"
                   alt="Quem Somos - Ideal Solutions"
-                  className="w-full max-w-[540px] h-auto object-contain rounded-2xl shadow-xl border border-slate-200/80"
+                  className="w-full h-auto object-contain select-none"
                 />
               </div>
 
