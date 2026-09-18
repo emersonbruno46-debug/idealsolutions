@@ -228,23 +228,11 @@ export default function DentistLanding() {
       if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
-    setLoading(true);
-    try {
-      const payload = {
-        ...form,
-        ...utms,
-        timestamp: new Date().toISOString(),
-      };
-      if (import.meta.env.DEV) {
-        console.log("[Lead Ideal Solutions]:", payload);
-      }
-      await new Promise(r => setTimeout(r, 1000));
-      setSuccess(true);
-    } catch {
-      alert("Houve um problema ao enviar. Por favor, tente novamente.");
-    } finally {
-      setLoading(false);
-    }
+    // Redirect to WhatsApp with pre-filled message
+    const msg = encodeURIComponent(
+      `Olá! Me chamo ${form.nome}, sou de ${form.clinica} (${form.segmento}). Gostaria de conhecer as soluções da Ideal para minha clínica.`
+    );
+    window.open(`https://wa.me/5511999999999?text=${msg}`, "_blank", "noopener,noreferrer");
   };
 
   const navLinks = [
@@ -620,10 +608,9 @@ export default function DentistLanding() {
                       {/* Submit Button */}
                       <button
                         type="submit"
-                        disabled={loading}
                         className="w-full h-12 bg-[#FFD400] hover:bg-[#FACC15] text-[#0F172A] font-extrabold text-[15px] rounded-full transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2 mt-2"
                       >
-                        {loading ? "Enviando informações..." : "Quero atrair mais pacientes"}
+                        Falar com a equipe no WhatsApp
                       </button>
                     </form>
                   )}

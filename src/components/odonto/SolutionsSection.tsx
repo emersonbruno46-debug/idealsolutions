@@ -1,6 +1,4 @@
-
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Autoplay, EffectCards, Navigation, Pagination } from "swiper/modules";
@@ -27,11 +25,26 @@ const mobileImages = [
   { src: "/solucoes/solucao-mobile-5.webp", alt: "Captação Qualificada - Mobile" },
 ];
 
+// MD breakpoint = 768px (same as Tailwind md:)
+const MD_BREAKPOINT = 768;
+
 interface SolutionsSectionProps {
   onCtaClick?: () => void;
 }
 
 export default function SolutionsSection({ onCtaClick }: SolutionsSectionProps) {
+  // Conditionally render only the needed image set — not CSS hide.
+  // Initialise to null to avoid hydration mismatch; effect runs on mount.
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(min-width: ${MD_BREAKPOINT}px)`);
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   const scrollToForm = () => {
     if (onCtaClick) {
       onCtaClick();
@@ -48,6 +61,20 @@ export default function SolutionsSection({ onCtaClick }: SolutionsSectionProps) 
       });
     }
   };
+
+  // Shared Swiper config
+  const swiperProps = {
+    effect: "cards" as const,
+    grabCursor: true,
+    loop: false,
+    autoplay: {
+      delay: 2800,
+      disableOnInteraction: false,
+    },
+    modules: [EffectCards, Autoplay, Pagination, Navigation],
+  };
+
+  const images = isDesktop ? desktopImages : mobileImages;
 
   return (
     <section id="solucoes" className="py-16 sm:py-24 bg-white text-[#0F172A] border-b border-slate-200 relative overflow-hidden">
@@ -66,100 +93,91 @@ export default function SolutionsSection({ onCtaClick }: SolutionsSectionProps) 
         {/* Layout Grid: Esquerda = Carrossel de Cartas | Direita = Texto Resumido */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* Coluna da Esquerda: Carrossel 3D (Skiper / Swiper Cards) */}
-          <div className="lg:col-span-7 flex flex-col items-center justify-center w-full min-h-[340px] sm:min-h-[400px]">
+          {/* Coluna da Esquerda: Carrossel 3D — renderiza apenas o conjunto adequado ao viewport */}
+          <div className="lg:col-span-7 flex flex-col items-center justify-center w-full">
             
-            {/* Versão DESKTOP: Imagens Horizontais 1672x941 (Proporção Exata 1.7768:1 -> 550px x 309px) */}
-            <div className="hidden md:block w-full">
-              <style>{`
-                .SwiperCardsDesktop {
-                  width: 550px !important;
-                  height: 309px !important;
-                }
-                .SwiperCardsDesktop .swiper-slide {
-                  border-radius: 1.25rem;
-                  overflow: hidden;
-                  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
-                  border: 1px solid rgba(0,0,0,0.08);
-                  background: transparent;
-                }
-              `}</style>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="relative w-full flex items-center justify-center py-2"
-              >
-                <Swiper
-                  effect="cards"
-                  grabCursor={true}
-                  loop={false}
-                  autoplay={{
-                    delay: 2800,
-                    disableOnInteraction: false,
-                  }}
-                  className="SwiperCardsDesktop"
-                  modules={[EffectCards, Autoplay, Pagination, Navigation]}
-                >
-                  {desktopImages.map((image, index) => (
-                    <SwiperSlide key={index}>
-                      <img
-                        className="w-full h-full object-fill block select-none rounded-2xl"
-                        src={image.src}
-                        alt={image.alt}
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </motion.div>
-            </div>
+            {/* Placeholder enquanto detecta breakpoint (evita layout shift) */}
+            {isDesktop === null && (
+              <div className="w-full" style={{ height: 309 }} />
+            )}
 
-            {/* Versão MOBILE: Imagens Verticais 1122x1402 (Proporção Exata 0.8:1 -> 280px x 350px) */}
-            <div className="block md:hidden w-full">
-              <style>{`
-                .SwiperCardsMobile {
-                  width: 280px !important;
-                  height: 350px !important;
-                }
-                .SwiperCardsMobile .swiper-slide {
-                  border-radius: 1.25rem;
-                  overflow: hidden;
-                  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
-                  border: 1px solid rgba(0,0,0,0.08);
-                  background: transparent;
-                }
-              `}</style>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="relative w-full flex items-center justify-center py-2"
-              >
-                <Swiper
-                  effect="cards"
-                  grabCursor={true}
-                  loop={false}
-                  autoplay={{
-                    delay: 2800,
-                    disableOnInteraction: false,
-                  }}
-                  className="SwiperCardsMobile"
-                  modules={[EffectCards, Autoplay, Pagination, Navigation]}
+            {isDesktop === true && (
+              <>
+                <style>{`
+                  .SwiperCardsDesktop {
+                    width: 550px !important;
+                    height: 309px !important;
+                  }
+                  .SwiperCardsDesktop .swiper-slide {
+                    border-radius: 1.25rem;
+                    overflow: hidden;
+                    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+                    border: 1px solid rgba(0,0,0,0.08);
+                    background: transparent;
+                  }
+                `}</style>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  className="relative w-full flex items-center justify-center py-2"
                 >
-                  {mobileImages.map((image, index) => (
-                    <SwiperSlide key={index}>
-                      <img
-                        className="w-full h-full object-fill block select-none rounded-2xl"
-                        src={image.src}
-                        alt={image.alt}
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </motion.div>
-            </div>
+                  <Swiper {...swiperProps} className="SwiperCardsDesktop">
+                    {images.map((image, index) => (
+                      <SwiperSlide key={index}>
+                        <img
+                          className="w-full h-full object-fill block select-none rounded-2xl"
+                          src={image.src}
+                          alt={image.alt}
+                          loading={index === 0 ? "eager" : "lazy"}
+                          decoding="async"
+                        />
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </motion.div>
+              </>
+            )}
+
+            {isDesktop === false && (
+              <>
+                <style>{`
+                  .SwiperCardsMobile {
+                    width: 280px !important;
+                    height: 350px !important;
+                  }
+                  .SwiperCardsMobile .swiper-slide {
+                    border-radius: 1.25rem;
+                    overflow: hidden;
+                    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+                    border: 1px solid rgba(0,0,0,0.08);
+                    background: transparent;
+                  }
+                `}</style>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  className="relative w-full flex items-center justify-center py-2"
+                >
+                  <Swiper {...swiperProps} className="SwiperCardsMobile">
+                    {images.map((image, index) => (
+                      <SwiperSlide key={index}>
+                        <img
+                          className="w-full h-full object-fill block select-none rounded-2xl"
+                          src={image.src}
+                          alt={image.alt}
+                          loading={index === 0 ? "eager" : "lazy"}
+                          decoding="async"
+                        />
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </motion.div>
+              </>
+            )}
 
             <p className="text-[12px] text-slate-500 mt-4 text-center tracking-wide uppercase font-semibold">
               Arraste os cards para explorar os modelos
